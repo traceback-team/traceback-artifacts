@@ -65,8 +65,8 @@
           "description": "Database Engine의 뜻과 실제 결합 형태를 구분한 뒤, SQL 처리 계층과 저장 구현의 역할 및 대표 내부 구조를 학습합니다.",
           "layout": "reading-path",
           "artifacts": [
-            {"id": "DB-ENGINE-01", "title": "Database Engine과 SQL 처리", "description": "엔진의 뜻과 형태, 서버형 RDBMS의 SQL → 저장 접근 과정", "href": "topics/database-systems/storage-engine/overview/index.html"},
-            {"id": "DB-ENGINE-02", "title": "스토리지 엔진 종류와 내부 구조", "description": "8개 저장 기술의 분류와 InnoDB·SQLite·RocksDB 데이터 경로", "href": "topics/database-systems/storage-engine/types-and-internals/index.html"}
+            {"id": "DB-ENGINE-01", "title": "DBMS와 Engine의 결합 형태", "description": "공통 Engine 위치와 PostgreSQL·MySQL/InnoDB·SQLite·RocksDB의 정체 구분", "href": "topics/database-systems/storage-engine/overview/index.html"},
+            {"id": "DB-ENGINE-02", "title": "PostgreSQL · MySQL/InnoDB 내부 구성", "description": "Parser→Executor SQL 처리와 두 서버형 DBMS의 저장·메모리·복구 구성 비교", "href": "topics/database-systems/storage-engine/types-and-internals/index.html"}
           ]
         },
         {

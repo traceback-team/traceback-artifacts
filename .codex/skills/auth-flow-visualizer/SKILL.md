@@ -66,6 +66,31 @@ future domains without reducing the explanation to a table or a prose-only page.
   behind tabs or closed details, preserve diagrams and screenshots, and omit
   navigation controls; restore the interactive state after printing.
 
+## Information density and progressive disclosure
+
+- Keep one primary end-to-end flow visible. Do not repeat the same full flow as
+  a definition grid, a second lane, and a step rail. If another view does not add
+  a distinct relationship, remove it and let the primary flow control the detail.
+- Give each always-visible node only the stage name, its main input-to-output
+  transformation, and at most one short plain-language responsibility. Do not
+  shrink type or tighten spacing to fit examples, evidence, and exceptions into
+  the overview; a taller page is preferable to a crowded first view.
+- Put concrete evidence next to the stage that raises it, inside an accessible
+  expand/collapse block by default. Examples include Catalog rows, before/after
+  internal structures, candidate-plan comparisons, source excerpts, and
+  engine-specific caveats. Keep the closed summary specific enough that readers
+  know what evidence it reveals.
+- Use a compact visual for comparisons that readers must scan, such as before →
+  after, two candidate paths → one choice, or metadata record → resolved object.
+  Put the explanatory prose after that visual instead of embedding paragraphs in
+  every overview node.
+- Split to another page only when the detail is a reusable subject with its own
+  learning goal. Do not create a separate glossary or page merely to make a
+  crowded overview shorter; first remove duplication and use local disclosure.
+- Check both the default closed state and representative expanded states at a
+  narrow and desktop viewport. The closed state must show the whole flow without
+  overload, and opening one detail must not create horizontal overflow or tiny text.
+
 ## Accuracy checks
 
 - Verify every node, edge, state, and transition against the current source before rendering.

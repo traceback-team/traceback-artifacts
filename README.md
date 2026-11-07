@@ -29,10 +29,11 @@ TRACEBACK의 학습용 시각 문서를 백엔드 코드와 독립적으로 관�
 [`PostgreSQL · InnoDB 탐색기`](docs/artifact/topics/database-systems/storage/postgresql-innodb/index.html)로
 이어집니다.
 스토리지 엔진은
-[`Database Engine과 SQL 처리`](docs/artifact/topics/database-systems/storage-engine/overview/index.html)에서
-공통 역할과 SQL 처리 흐름을 먼저 익힌 뒤,
-[`스토리지 엔진 종류와 내부 구조`](docs/artifact/topics/database-systems/storage-engine/types-and-internals/index.html)에서
-InnoDB·SQLite 저장 계층·RocksDB의 읽기·쓰기 구조를 비교합니다.
+[`DBMS와 Engine의 결합 형태`](docs/artifact/topics/database-systems/storage-engine/overview/index.html)에서
+공통 Engine 위치를 보고 PostgreSQL·MySQL/InnoDB·SQLite·RocksDB의 정체와 결합 형태를 구분한 뒤,
+[`PostgreSQL · MySQL/InnoDB 내부 구성`](docs/artifact/topics/database-systems/storage-engine/types-and-internals/index.html)에서
+Parser부터 Executor까지의 SQL 처리 과정과 두 서버형 DBMS의 저장 접근 경계,
+메모리·MVCC·복구 책임을 비교합니다.
 동시성·잠금도 먼저
 [`좌석 예약으로 읽는 동시성`](docs/artifact/topics/database-systems/concurrency/foundations/index.html)에서
 한 좌석의 대기·덮어쓰기와 여러 좌석의 교착, 처리 방법 및
