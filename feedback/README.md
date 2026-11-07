@@ -7,7 +7,7 @@ GitHub account that submitted it. Text selection is not required.
 
 The Cloudflare Worker accepts form submissions only from the GitHub account
 with ID `88140361` (`oscar2272`). It writes a new JSON file here using a
-GitHub App installed only on `orange-taco/traceback-artifacts`. The repository
+GitHub App installed only on `traceback-team/traceback-artifacts`. The repository
 is public, so **anyone can read these opinions**. Do not put secrets or private
 information in a comment.
 

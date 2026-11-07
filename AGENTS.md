@@ -2,8 +2,8 @@
 
 This repository owns the TRACEBACK learning HTML, images, and the
 `auth-flow-visualizer` skill. The backend source of truth is the separate
-`orange-taco/traceback` repository; frontend and Vercel implementation live in
-`orange-taco/traceback-client`.
+`traceback-team/traceback` repository; frontend and Vercel implementation live in
+`traceback-team/traceback-client`.
 
 Before changing a guide:
 
@@ -15,8 +15,8 @@ Before changing a guide:
    `.codex/skills/question-led-learning/SKILL.md`.
 3. Identify which statements describe general concepts and which describe
    current TRACEBACK code or deployed state.
-4. For current-code claims, inspect `orange-taco/traceback` or
-   `orange-taco/traceback-client` at an identifiable revision, as appropriate.
+4. For current-code claims, inspect `traceback-team/traceback` or
+   `traceback-team/traceback-client` at an identifiable revision, as appropriate.
    Their default branches are `main`; use `development` or the named PR branch
    when documenting work that has not reached `main`.
    In Codex Cloud, attach both source repositories and this artifact repository

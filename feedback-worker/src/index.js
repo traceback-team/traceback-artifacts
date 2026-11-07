@@ -236,7 +236,7 @@ async function saved(request, env, url) {
   if (!/^[0-9a-f-]{36}$/.test(id) || !documentUrl) return new Response("Invalid feedback reference", { status: 400 });
   const repoUrl = `https://github.com/${env.GITHUB_OWNER}/${env.FEEDBACK_REPO}/blob/main/feedback/${id}.json`;
   const allPrompt = batchPrompt(` 특히 방금 저장한 feedback/${id}.json을 포함하세요.`);
-  const onePrompt = `TRACEBACK Study (3 repos) Codex Cloud 환경에서 orange-taco/traceback-artifacts의 feedback/${id}.json을 읽어 주세요. 의견의 문서 URL과 게시 revision을 현재 HTML 및 관련 원본 코드와 비교하고, 타당한 수정만 AGENTS.md와 auth-flow-visualizer 스킬에 따라 반영해 주세요. python3 scripts/verify_site.py와 좁은 화면 및 데스크톱 화면을 확인하고 문서 PR을 만들어 주세요. 자동 병합은 하지 마세요.`;
+  const onePrompt = `TRACEBACK Study (3 repos) Codex Cloud 환경에서 traceback-team/traceback-artifacts의 feedback/${id}.json을 읽어 주세요. 의견의 문서 URL과 게시 revision을 현재 HTML 및 관련 원본 코드와 비교하고, 타당한 수정만 AGENTS.md와 auth-flow-visualizer 스킬에 따라 반영해 주세요. python3 scripts/verify_site.py와 좁은 화면 및 데스크톱 화면을 확인하고 문서 PR을 만들어 주세요. 자동 병합은 하지 마세요.`;
   return html(`<div class="card"><h1>의견을 저장했습니다</h1><p>의견 ID: <code>${htmlEscape(id)}</code></p><p><a href="${htmlEscape(repoUrl)}">공개 의견 보기</a></p><p class="muted">저장만 완료됐습니다. Codex 작업과 문서 수정은 아직 시작되지 않았습니다.</p>
     <h2>Codex Cloud에서 수정 요청</h2><p>다음 요청을 복사하고 <strong>TRACEBACK Study (3 repos)</strong> 환경에서 새 작업으로 보내세요. 여러 의견을 한 작업에서 검토할 수 있습니다.</p>
     <label for="prompt-all">모든 의견을 한 번에 검토</label><textarea id="prompt-all" readonly>${htmlEscape(allPrompt)}</textarea><button type="button" data-copy="prompt-all">요청 복사</button>
@@ -245,7 +245,7 @@ async function saved(request, env, url) {
 }
 
 function batchPrompt(recent = "") {
-  return `TRACEBACK Study (3 repos) Codex Cloud 환경에서 orange-taco/traceback-artifacts의 feedback/*.json을 모두 읽어 주세요.${recent} 각 의견의 document_url, section_id, location, comment, document_revision을 확인하고 현재 HTML 및 관련 원본 코드와 비교하세요. 중복되거나 이미 반영된 의견은 구분하고, 타당한 의견만 한 번의 아티팩트 변경으로 정리해 주세요. AGENTS.md와 auth-flow-visualizer 스킬을 따르고 python3 scripts/verify_site.py 및 좁은 화면과 데스크톱 화면을 확인하세요. 변경 이유와 반영하지 않은 의견을 설명하고 문서 PR을 만들어 주세요. 자동 병합은 하지 마세요.`;
+  return `TRACEBACK Study (3 repos) Codex Cloud 환경에서 traceback-team/traceback-artifacts의 feedback/*.json을 모두 읽어 주세요.${recent} 각 의견의 document_url, section_id, location, comment, document_revision을 확인하고 현재 HTML 및 관련 원본 코드와 비교하세요. 중복되거나 이미 반영된 의견은 구분하고, 타당한 의견만 한 번의 아티팩트 변경으로 정리해 주세요. AGENTS.md와 auth-flow-visualizer 스킬을 따르고 python3 scripts/verify_site.py 및 좁은 화면과 데스크톱 화면을 확인하세요. 변경 이유와 반영하지 않은 의견을 설명하고 문서 PR을 만들어 주세요. 자동 병합은 하지 마세요.`;
 }
 
 async function handoff(request, env) {

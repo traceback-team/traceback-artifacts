@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="artifact-format" content="standalone" />
+    <title>정현규 | Backend Engineer</title>
+    <meta name="description" content="정현규 백엔드 엔지니어 이력서" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231a3852'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-size='31' fill='white' font-family='sans-serif'%3EJ%3C/text%3E%3C/svg%3E"
+    />
+    <style>
+      :root {
+        --navy: #18364f;
+        --blue: #2b79ad;
+        --ink: #17232d;
+        --muted: #607180;
+        --line: #d8e1e8;
+        --soft: #eef5f9;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #e9eef2;
+        color: var(--ink);
+        font-family:
+          "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", system-ui,
+          sans-serif;
+        font-size: 14px;
+        line-height: 1.55;
+        word-break: keep-all;
+      }
+      .toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px;
+        background: rgba(24, 54, 79, 0.94);
+        backdrop-filter: blur(8px);
+      }
+      .toolbar-action {
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.34);
+        border-radius: 9px;
+        padding: 9px 17px;
+        background: transparent;
+        color: white;
+        font: 700 14px inherit;
+        text-decoration: none;
+        cursor: pointer;
+        transition:
+          background 0.18s,
+          transform 0.18s;
+      }
+      .toolbar-action.primary {
+        border-color: white;
+        background: white;
+        color: var(--navy);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+      }
+      .toolbar-action:hover {
+        background: rgba(255, 255, 255, 0.12);
+        transform: translateY(-1px);
+      }
+      .toolbar-action.primary:hover {
+        background: #f5fbff;
+      }
+      .page {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 24px auto;
+        padding: 14mm 15mm;
+        background: white;
+        box-shadow: 0 18px 60px rgba(24, 54, 79, 0.16);
+      }
+      header {
+        display: grid;
+        grid-template-columns: 1fr 31mm;
+        gap: 10mm;
+        align-items: center;
+        padding: 8mm 9mm;
+        border-radius: 16px;
+        background: var(--soft);
+      }
+      h1 {
+        margin: 0;
+        color: var(--navy);
+        font-size: 30px;
+        line-height: 1.1;
+        letter-spacing: -0.04em;
+        font-weight: 750;
+      }
+      .role {
+        margin: 5px 0 13px;
+        color: var(--blue);
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+      }
+      .contact {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3px 12px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .contact a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .photo {
+        width: 31mm;
+        height: 41mm;
+        object-fit: cover;
+        object-position: center top;
+        border-radius: 9px;
+        display: block;
+      }
+      section {
+        margin-top: 13px;
+      }
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+      .section-title h2 {
+        margin: 0;
+        min-width: 110px;
+        padding: 4px 12px;
+        border-radius: 7px;
+        color: white;
+        background: var(--navy);
+        font-size: 13px;
+        line-height: 1.25;
+        letter-spacing: 0.04em;
+      }
+      .section-title::after {
+        content: "";
+        height: 1px;
+        flex: 1;
+        background: var(--line);
+      }
+      .summary {
+        margin: 0 4px;
+        color: var(--ink);
+        font-size: 13px;
+      }
+      .job-head,
+      .edu {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 12px;
+        align-items: baseline;
+      }
+      .job-head strong,
+      .project-head strong,
+      .edu strong {
+        color: var(--navy);
+        font-size: 15px;
+      }
+      .meta,
+      .date {
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .context {
+        margin: 1px 3px 7px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+      li {
+        margin: 5px 0;
+        padding-left: 2px;
+      }
+      li::marker {
+        color: var(--blue);
+      }
+      .item-date {
+        margin-left: 7px;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+      .experience-category {
+        list-style: none;
+        margin: 11px 0 5px -20px;
+        padding: 4px 9px;
+        border-left: 3px solid var(--blue);
+        background: var(--soft);
+        color: var(--navy);
+        font-size: 12px;
+        font-weight: 750;
+        letter-spacing: 0.02em;
+      }
+      .project-head {
+        display: flex;
+        gap: 12px;
+        align-items: baseline;
+      }
+      .activity-head {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: baseline;
+        margin: 0 3px 3px;
+      }
+      .activity-head strong {
+        color: var(--navy);
+        font-size: 15px;
+      }
+      .activity-copy {
+        margin: 0 3px;
+        color: #4e6171;
+        font-size: 13px;
+      }
+      .activity-list {
+        margin: 0 4px;
+        padding-left: 18px;
+      }
+      .activity-list li {
+        display: grid;
+        grid-template-columns: 104px 1fr;
+        gap: 10px;
+        margin: 3px 0;
+      }
+      .activity-list .activity-date {
+        color: var(--muted);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+      .activity-list strong {
+        color: var(--navy);
+      }
+      .stack {
+        margin: 1px 3px 7px;
+        color: var(--blue);
+        font-size: 12px;
+      }
+      .artifact-link {
+        margin: 0 3px 7px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .artifact-link strong {
+        color: var(--navy);
+      }
+      .artifact-link a {
+        color: var(--blue);
+        text-decoration: none;
+      }
+      .artifact-link a:hover {
+        text-decoration: underline;
+      }
+      .skills {
+        display: grid;
+        grid-template-columns: 90px 1fr;
+        gap: 5px 12px;
+        margin: 0 4px;
+      }
+      .skills dt {
+        color: var(--blue);
+        font-weight: 700;
+      }
+      .skills dd {
+        margin: 0;
+      }
+      @media (max-width: 850px) {
+        .page {
+          width: 100%;
+          min-height: 0;
+          margin: 0;
+          padding: 24px 20px;
+          box-shadow: none;
+        }
+        header {
+          grid-template-columns: 1fr 92px;
+          padding: 22px;
+        }
+        .photo {
+          width: 92px;
+          height: 122px;
+        }
+        .job-head,
+        .edu {
+          grid-template-columns: 1fr auto;
+          gap: 2px 10px;
+        }
+        .job-head .meta,
+        .edu span {
+          grid-column: 1 / -1;
+        }
+      }
+      @media print {
+        @page {
+          size: A4;
+          margin: 0;
+        }
+        body {
+          background: white;
+          font-size: 9.7pt;
+          line-height: 1.44;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        .toolbar {
+          display: none;
+        }
+        .page {
+          width: 210mm;
+          min-height: 297mm;
+          margin: 0;
+          padding: 9mm 12mm;
+          box-shadow: none;
+        }
+        header {
+          grid-template-columns: 1fr 22mm;
+          gap: 7mm;
+          padding: 3mm 6mm;
+          border-radius: 9px;
+        }
+        .photo {
+          width: 22mm;
+          height: 29mm;
+          border-radius: 6px;
+        }
+        h1 {
+          font-size: 22pt;
+        }
+        .role {
+          margin: 2px 0 6px;
+          font-size: 10pt;
+        }
+        .contact,
+        .meta,
+        .date,
+        .context,
+        .stack,
+        .artifact-link {
+          font-size: 8.5pt;
+        }
+        section {
+          margin-top: 6px;
+        }
+        li,
+        .edu,
+        .job-head,
+        .section-title {
+          break-inside: avoid;
+        }
+        .section-title {
+          break-after: avoid;
+        }
+        .section-title {
+          margin-bottom: 4px;
+        }
+        .section-title h2 {
+          min-width: 84px;
+          padding: 2px 9px;
+          font-size: 8.5pt;
+        }
+        .summary {
+          font-size: 9.2pt;
+        }
+        .job-head strong,
+        .project-head strong,
+        .activity-head strong,
+        .edu strong {
+          font-size: 10.6pt;
+        }
+        .activity-head,
+        .activity-copy {
+          break-inside: avoid;
+        }
+        .activity-copy {
+          font-size: 9.2pt;
+        }
+        .context,
+        .stack,
+        .artifact-link {
+          margin-bottom: 4px;
+        }
+        li {
+          margin: 2.5px 0;
+        }
+        .experience-category {
+          margin: 6px 0 3px -20px;
+          padding: 2px 7px;
+          font-size: 8.5pt;
+          break-after: avoid;
+        }
+        .skills {
+          gap: 1px 10px;
+        }
+        .experience-category.page-start {
+          break-before: page;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toolbar">
+      <button
+        class="toolbar-action primary"
+        type="button"
+        onclick="window.print()"
+      >
+        PDF로 저장
+      </button>
+    </div>
+    <main class="page">
+      <header>
+        <div>
+          <h1>정현규</h1>
+          <div class="role">BACKEND ENGINEER</div>
+          <div class="contact">
+            <a href="https://github.com/oscar2272">github.com/oscar2272</a>
+          </div>
+        </div>
+      </header>
+
+      <section>
+        <div class="section-title"><h2>SUMMARY</h2></div>
+        <p class="summary">
+          이커머스에서 결제 안정성, 구매 전환, 운영 효율을 개선해 온 백엔드
+          엔지니어입니다. 국내·해외 PG 모듈을 신규 구축하고, 웹훅 누락에도 PG
+          상태를 다시 조회해 주문을 복구하는 구조를 설계했으며, 사용자 발급형
+          바우처와 역할·데이터 범위 기반의 관리자 권한 체계를 개발했습니다. 기능
+          출시 후에는 Airbridge·Amplitude·GA4의 사용자 행동 지표와
+          Logfire·Grafana의 운영 로그를 함께 분석해 문제를 찾고, API·데이터
+          수집·운영 구조를 개선한 뒤 결과를 다시 검증합니다.
+        </p>
+      </section>
+
+      <section>
+        <div class="section-title"><h2>EDUCATION</h2></div>
+        <div class="edu">
+          <strong>한경국립대학교</strong><span class="meta">컴퓨터공학과</span
+          ><span class="date">2018.03 - 2025.08</span>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-title"><h2>RESEARCH &amp; ACTIVITIES</h2></div>
+        <ul class="activity-list">
+          <li>
+            <span class="activity-date">2024.01 - 2024.12</span>
+            <span><strong>학부 연구실</strong> · 연구 활동</span>
+          </li>
+          <li>
+            <span class="activity-date">2024</span>
+            <span
+              ><strong>제2회 ETRI 휴먼이해 인공지능 논문경진대회</strong> · 참가
+              및 연구 결과 논문집 수록</span
+            >
+          </li>
+          <li>
+            <span class="activity-date">2024.01 - 2024.12</span>
+            <span><strong>창업동아리</strong></span>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <div class="section-title"><h2>EXPERIENCE</h2></div>
+        <div class="job-head">
+          <strong>VELYMONKEYS</strong
+          ><span class="meta">백엔드 엔지니어 · 서비스개발팀</span
+          ><span class="date">2026.01 - 2026.10.31</span>
+        </div>
+        <p class="context">
+          인도 시장에서 뷰티 제품을 판매하는 Saleor 기반 이커머스 플랫폼
+        </p>
+        <ul>
+          <li class="experience-category">결제·주문 시스템</li>
+          <li>
+            <strong
+              >국내 Razorpay V2 결제 모듈 신규 개발과 웹훅 누락 자동
+              복구</strong
+            ><span class="item-date">2026.03</span><br />기존 국내 Razorpay
+            결제는 클라이언트가 PG 결제를 먼저 시작해 서버에 PG 주문 ID와
+            요청·응답 기록이 남지 않았고, PG 웹훅이 누락되면 결제 결과를 확인해
+            주문에 반영하기 어려웠습니다. 기존 모듈을 수정하는 대신 Razorpay V2
+            게이트웨이 모듈을 새로 개발해 서버가 PG 주문을 생성하고 초기 거래와
+            요청·응답을 저장하도록 전환했습니다. PG에서는 결제가 진행됐지만
+            웹훅이 누락된 경우, 비동기 작업이 PG 상태를 다시 조회해 완료된
+            결제는 주문에 반영하고 승인만 된 결제는 자동 매입하도록
+            복구했습니다. 멤버십 결제에도 상태 조회·보정 작업을 추가해 4개월간
+            7,400건 이상의 갱신 상태를 자동 정정했습니다.
+          </li>
+          <li>
+            <strong>해외 주문용 Razorpay 결제 모듈 신규 도입</strong
+            ><span class="item-date">2026.07 – 2026.09</span><br />해외 주문
+            결제가 Cashfree 한 곳에만 의존해 장애와 운영 부담을 분산할 대체
+            수단이 필요했습니다. Razorpay 담당자와 해외 결제 도입 미팅을 진행해
+            목표 출시 일정과 국내 결제와의 차이를 확인하고, 기능별 적용 여부와
+            연동 범위를 협의했습니다. 합의한 범위를 바탕으로 국내 결제용
+            Razorpay V2의 공통 구조를 활용하되, 해외 주문 전용 결제 유형과
+            Razorpay MGS 게이트웨이 모듈을 별도로 개발했습니다. 고객·배송지·상품
+            분류 코드 검증, 결제 서명 확인, 미매입 결제 자동 매입을 구현하고
+            정산용 인보이스의 SFTP 전송·전송 결과 기록·실패 알림까지
+            연결했습니다.
+          </li>
+          <li class="experience-category">커머스 기능 및 API 개발</li>
+          <li>
+            <strong>사용자 발급형 바우처와 관리자 콘솔 개발</strong
+            ><span class="item-date">2026.07 – 2026.08</span><br />기존 바우처는
+            여러 사용자가 같은 바우처를 공유하고 사용 여부를 주문 기록으로만
+            확인해, 사용자가 언제 발급받았는지와 발급 후 실제로 사용했는지를
+            구분해 측정하기 어려웠습니다. 이를 개선해 이벤트 페이지 등 고객
+            접점에서 사용자가 직접 바우처를 발급받게 하고, 발급·사용 전환 지표를
+            캠페인 성과와 바우처 정책 개선에 활용하고자 했습니다. 기존 할인·보상
+            규칙은 Voucher에 유지하고, 사용자별 발급 기록은 IssuedVoucher로
+            분리해 발급 시점·발급 주체·유효기간·사용 횟수를 관리했습니다. 발급
+            API와 Amplitude 이벤트 수집을 구현했으며, 신규 관리자 콘솔에서
+            바우처 생성·활성화, 적용 대상 설정, 수동 발급과 발급 이력 조회까지
+            운영할 수 있도록 개발했습니다. 동시 발급 요청에도 전체 발급 한도가
+            초과되지 않도록 처리했으며, 사용자 2,177명에게 바우처 3,074개를
+            발급했습니다.
+          </li>
+          <li>
+            <strong>보안·유지보수·모니터링 개선을 위한 DRF 전환</strong
+            ><span class="item-date">2026.08 – 2026.10</span><br />기존 GraphQL
+            구조에서는 공개 기능과 인증이 필요한 기능의 접근 정책이 한곳에 섞여
+            있었고, 기능을 변경할 때 영향을 받는 범위를 파악하기 어려웠습니다.
+            요청이 하나의 엔드포인트에 모여 기능별 사용량과 오류 원인을
+            추적하기도 어려웠습니다. 핵심 기능을 공개용·인증용 DRF REST API로
+            분리하고 URL·설정·실행 서비스를 나눴습니다. 사용자 전용 API에는 인증
+            검사와 소유자 조건을 함께 적용했으며, Logfire로 API별 요청과 오류를
+            추적하도록 개선했습니다.
+          </li>
+          <li class="experience-category page-start">
+            관리자 플랫폼 및 권한 체계
+          </li>
+          <li>
+            <strong>기존 관리자 대시보드 교체와 역할별 권한 체계 구축</strong
+            ><span class="item-date">2026.04 – 2026.07</span><br />기존 관리자
+            대시보드는 기능별 Django 권한을 사용자에게 직접 부여하는 구조여서,
+            staff·seller·HQ처럼 역할이 다른 운영자의 계정 체계와 데이터 접근
+            범위를 분리해 관리하기 어려웠습니다. 신규 관리자 콘솔에서는 역할별
+            계정 모델을 분리하고, 각 역할에 필요한 기능을 조회·수정·관리 단계로
+            나눠 권한 체계를 재구성했습니다. 계정·메뉴·권한을 운영할 수 있는
+            REST API도 함께 개발했습니다. 또한 권한 그룹 관리 API로 새 구성원
+            계정까지 만들 수 있던 우회 경로를 차단했습니다. 그룹 권한 변경과
+            구성원 추가 API를 분리하고, 권한이나 역할이 맞지 않는 요청이
+            거부되는지 테스트했습니다.
+          </li>
+          <li class="experience-category">데이터·모니터링 기반 개선</li>
+          <li class="print-page-break">
+            <strong>사용자 행동 지표를 기반으로 기능과 API 개선</strong
+            ><br />기능 출시 후 Airbridge·Amplitude·GA4에서 유입 경로와 이용
+            흐름·전환 지표를 확인하고, 결과를 바탕으로 API 응답과 이벤트 수집
+            방식을 개선했습니다. MCP로 각 분석 도구의 데이터를 요약·비교하고
+            코드·DB와 대조해, 지표 변화가 실제 사용자 행동인지 수집 누락인지
+            구분했습니다. 발급형 바우처에서는 Amplitude의 발급 이벤트와 DB의
+            사용 기록을 연결해 발급부터 사용까지의 전환을 확인하고, 캠페인과
+            바우처 정책 개선에 활용했습니다.
+          </li>
+          <li>
+            <strong>운영 지표와 로그를 기반으로 장애 분석 및 배포 안정화</strong
+            ><br />배포 후 Logfire·Grafana에서 API 요청량과 오류 응답을
+            모니터링하고, 애플리케이션·배포·인프라 로그를 함께 확인해 문제
+            범위를 좁혔습니다. 분석 결과에 따라 외부 서비스 응답 처리와
+            Docker·Jenkins 배포 설정을 수정했으며, EC2 자원 부족처럼
+            애플리케이션 외부에서 발생한 배포 실패 원인도 구분해 대응했습니다.
+            수정 후에는 운영 지표와 로그를 다시 확인해 정상 동작을 검증했습니다.
+          </li>
+          <li class="experience-category">개발 프로세스 자동화</li>
+          <li>
+            <strong>AI 개발 규칙·자동 검증·릴리스 공유 체계 구축</strong
+            ><br />AI가 레거시 구현을 그대로 답습하거나 작업마다 다른 기준으로
+            코드를 생성하는 문제를 줄이기 위해, 공통 개발 원칙과
+            DRF·모델·인증·테스트 등 작업 경로별 규칙을 문서화해 대상 코드에 맞는
+            기준이 자동으로 적용되도록 구성했습니다. 설계 단계에서는 MCP로
+            요구사항·DB·사용자 지표를 함께 확인하며 대안을 비교하고, 구현 후에는
+            테스트·정적 검사와 Playwright 화면·네트워크 검증을 거치도록 절차를
+            정리했습니다. CodeRabbit에는 조직의 리뷰 규칙을 상속해 자동 리뷰
+            기준을 통일했으며, GitHub Release가 생성되면 관련 티켓을 모아 Notion
+            릴리스 노트를 만들고 Slack에 공유하도록 자동화했습니다.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <div class="section-title"><h2>PROJECT</h2></div>
+        <div class="project-head">
+          <strong>TRACEBACK</strong
+          ><span class="meta">의류 브랜드 공동 프로젝트 · 실제 출시 준비</span>
+        </div>
+        <p class="stack">
+          Django 6.1 · DRF · React Router · PostgreSQL · Docker · GitHub Actions
+          · AWS · Vercel
+        </p>
+        <ul>
+          <li>
+            의류 제작을 담당하는 파트너와 함께 출시를 준비 중인 의류
+            브랜드입니다. 고객용 스토어와 브랜드 운영에 필요한 커머스 백엔드를
+            직접 개발하고 있습니다.
+          </li>
+          <li>
+            Django·DRF 백엔드와 React Router SSR 클라이언트를 분리하고,
+            이메일·카카오 인증과 세션·CSRF, 계정 연결 해제·탈퇴 흐름을
+            구현했습니다. Vercel과 AWS 개발 서버를 연결해 브라우저 인증 흐름을
+            검증하고 있습니다.
+          </li>
+          <li>
+            GitHub Actions가 품질 검사와 테스트를 통과한 이미지만 ECR에
+            저장하고, OIDC·SSM으로 EC2에 자동 배포하도록 구성했습니다. 개발
+            환경에서 RDS·SES·HTTPS 연결과 배포 이미지 일치 여부까지
+            검증했습니다.
+          </li>
+          <li>
+            상품·재고·장바구니·주문·결제는 단계별 구현을 앞두고 있으며, 비회원
+            구매와 재고 예약, PG 웹훅·상태 조회의 중복 처리 방지 등 실제 운영을
+            위한 기준을 먼저 정의했습니다.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <div class="section-title"><h2>DOCUMENTATION</h2></div>
+        <p class="artifact-link">
+          <strong>기술 문서 및 학습 기록</strong> ·
+          <a href="https://traceback-team.github.io/traceback-artifacts/"
+            >traceback-team.github.io/traceback-artifacts</a
+          ><br />TRACEBACK 구현 기록과 데이터베이스·알고리즘 개념 학습 자료를
+          구분해 정리한 문서 허브입니다.
+        </p>
+      </section>
+
+      <section>
+        <div class="section-title"><h2>SKILLS</h2></div>
+        <dl class="skills">
+          <dt>Backend</dt>
+          <dd>Python · Django · Django REST Framework · Celery</dd>
+          <dt>Frontend</dt>
+          <dd>TypeScript · React · Next.js</dd>
+          <dt>Data / Infra</dt>
+          <dd>PostgreSQL · Docker · AWS EC2 · GitHub Actions · Jenkins</dd>
+          <dt>Analytics / Ops</dt>
+          <dd>Airbridge · Amplitude · GA4 · Grafana · Logfire</dd>
+          <dt>AI / Tools</dt>
+          <dd>Claude Code · MCP · Playwright · CodeRabbit</dd>
+        </dl>
+      </section>
+    </main>
+    <script src="../navigation.js"></script>
+  </body>
+</html>

@@ -4,7 +4,7 @@ compatibility_date = "2026-10-07"
 workers_dev = true
 
 [vars]
-GITHUB_OWNER = "orange-taco"
+GITHUB_OWNER = "traceback-team"
 FEEDBACK_REPO = "traceback-artifacts"
 ALLOWED_GITHUB_USER_ID = "88140361"
-PUBLIC_SITE_ORIGIN = "https://orange-taco.github.io"
+PUBLIC_SITE_ORIGIN = "https://traceback-team.github.io"

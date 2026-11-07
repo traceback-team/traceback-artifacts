@@ -11,13 +11,13 @@ const env = {
   GITHUB_APP_ID: "12345",
   GITHUB_APP_INSTALLATION_ID: "67890",
   GITHUB_APP_PRIVATE_KEY: privateKey.export({ type: "pkcs8", format: "pem" }),
-  GITHUB_OWNER: "orange-taco",
+  GITHUB_OWNER: "traceback-team",
   FEEDBACK_REPO: "traceback-artifacts",
   ALLOWED_GITHUB_USER_ID: "88140361",
-  PUBLIC_SITE_ORIGIN: "https://orange-taco.github.io",
+  PUBLIC_SITE_ORIGIN: "https://traceback-team.github.io",
 };
 const root = "https://traceback-feedback.example.workers.dev";
-const doc = "https://orange-taco.github.io/traceback-artifacts/traceback-system-guide.html";
+const doc = "https://traceback-team.github.io/traceback-artifacts/traceback-system-guide.html";
 const revision = "a".repeat(40);
 
 function request(path, options = {}) {
@@ -98,7 +98,7 @@ test("only the owner can save feedback and saving cannot start an edit", async (
     assert.equal(savedPage.status, 200);
     const savedHtml = await savedPage.text();
     assert.match(savedHtml, /공개 의견 보기/);
-    assert.match(savedHtml, /github\.com\/orange-taco\/traceback-artifacts\/blob\/main\/feedback\//);
+    assert.match(savedHtml, /github\.com\/traceback-team\/traceback-artifacts\/blob\/main\/feedback\//);
     assert.match(savedHtml, /feedback\/\*\.json을 모두 읽어 주세요/);
     assert.match(savedHtml, /이번 의견만 검토하려면/);
     assert.match(savedHtml, /https:\/\/chatgpt\.com\/codex\/cloud/);
@@ -108,7 +108,7 @@ test("only the owner can save feedback and saving cannot start an edit", async (
     assert.match(await handoff.text(), /navigator\.clipboard\.writeText/);
     const write = githubCalls.find((call) => call.url.includes("/contents/feedback/"));
     assert.ok(write);
-    assert.match(write.url, /^https:\/\/api\.github\.com\/repos\/orange-taco\/traceback-artifacts\/contents\/feedback\/[^/]+\.json$/);
+    assert.match(write.url, /^https:\/\/api\.github\.com\/repos\/traceback-team\/traceback-artifacts\/contents\/feedback\/[^/]+\.json$/);
     assert.equal(write.options.method, "PUT");
     const payload = JSON.parse(write.options.body);
     const record = JSON.parse(Buffer.from(payload.content, "base64").toString("utf8"));

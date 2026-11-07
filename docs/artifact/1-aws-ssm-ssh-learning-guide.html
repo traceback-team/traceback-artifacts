@@ -260,7 +260,7 @@ namei -l /opt/traceback</code></pre><p>관리 권한이 부여된 경우에만 <
         <article class="card"><h3>로컬 컴퓨터 쪽 준비</h3><p>AWS CLI v2, Session Manager plugin, Identity Center의 <code>traceback-dev</code> 프로필, <code>aws ssm traceback-dev</code> 함수가 준비됨. 현재 Permission Set은 <code>AdministratorAccess</code>입니다. SSM 접속에는 이처럼 넓은 계정 권한이 필요하지 않으므로 장기적으로 SSM 대상 범위를 제한한 Permission Set으로 분리하는 편이 최소 권한 원칙에 맞습니다.</p></article>
       </div>
       <p class="caption">비용: 이 EC2에 대한 기본 Session Manager 셸 연결은 별도 세션 요금이 없다. EC2 인스턴스·공인 IPv4 등 기존 실행 비용은 계속 발생할 수 있다. 선택형 로그 수집을 켜면 CloudWatch Logs나 S3 사용 요금이 추가될 수 있다.</p>
-      <p class="caption">상태 출처: 이 저장소의 <a href="https://github.com/orange-taco/traceback/blob/d9ab9611c0b55ff5d5eb14542283c1b638db6a3d/docs/deployment.md">AWS 배포 설정 문서</a>와 작업 체크포인트. AWS 설정은 변경될 수 있으므로 접속 전 계정·인스턴스 상태를 다시 확인합니다.</p>
+      <p class="caption">상태 출처: 이 저장소의 <a href="https://github.com/traceback-team/traceback/blob/d9ab9611c0b55ff5d5eb14542283c1b638db6a3d/docs/deployment.md">AWS 배포 설정 문서</a>와 작업 체크포인트. AWS 설정은 변경될 수 있으므로 접속 전 계정·인스턴스 상태를 다시 확인합니다.</p>
     </section>
 
     <section id="vpc-endpoints">
@@ -330,7 +330,7 @@ namei -l /opt/traceback</code></pre><p>관리 권한이 부여된 경우에만 <
         <li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-security-groups.html">AWS: EC2 보안 그룹</a> — 인바운드/아웃바운드와 상태 저장 규칙</li>
         <li><a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-getting-started-privatelink.html">AWS: Session Manager 네트워크 요구사항</a> — HTTPS 아웃바운드 또는 VPC Endpoint</li>
         <li><a href="https://aws.amazon.com/systems-manager/pricing/">AWS Systems Manager 요금표</a> — EC2의 Session Manager/Run Command 요금과 유료 옵션</li>
-        <li>저장소: <a href="https://github.com/orange-taco/traceback/blob/d9ab9611c0b55ff5d5eb14542283c1b638db6a3d/docs/deployment.md">docs/deployment.md</a>, <a href="https://github.com/orange-taco/traceback/blob/d9ab9611c0b55ff5d5eb14542283c1b638db6a3d/docs/todo.md">docs/todo.md</a></li>
+        <li>저장소: <a href="https://github.com/traceback-team/traceback/blob/d9ab9611c0b55ff5d5eb14542283c1b638db6a3d/docs/deployment.md">docs/deployment.md</a>, <a href="https://github.com/traceback-team/traceback/blob/d9ab9611c0b55ff5d5eb14542283c1b638db6a3d/docs/todo.md">docs/todo.md</a></li>
       </ul>
       <p class="caption">일반 네트워크 설명은 AWS 기능 설명과 구분해 작성했습니다. AWS IAM, SSM Agent 정책, 보안 그룹 등은 AWS 전용 기능입니다.</p>
     </section>

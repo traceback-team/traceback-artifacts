@@ -32,7 +32,7 @@
         <div class="flow-node action"><small>Manual · agent</small><strong>④ 수정 여부 결정</strong><p>소유자가 Codex Cloud 작업을 따로 시작해 의견 파일을 읽고 수정 방향을 정한다.</p></div>
         <div class="flow-node"><small>Review · publish</small><strong>⑤ PR 검토 뒤 게시</strong><p>문서 변경 PR을 검토하고 병합하면 공개 Pages가 새 HTML을 배포한다.</p></div>
       </div>
-      <p class="flow-note">TRACEBACK 대응: GitHub Pages → Cloudflare Worker → <code>orange-taco/traceback-artifacts/feedback/</code> → 세 저장소를 연결한 개인 Codex Cloud 환경 → 문서 PR과 Pages. 의견 저장은 Codex 실행 요청이 아닙니다.</p>
+      <p class="flow-note">TRACEBACK 대응: GitHub Pages → Cloudflare Worker → <code>traceback-team/traceback-artifacts/feedback/</code> → 세 저장소를 연결한 개인 Codex Cloud 환경 → 문서 PR과 Pages. 의견 저장은 Codex 실행 요청이 아닙니다.</p>
       <div class="boundary">
         <div><strong>방문자 경로</strong><p>Pages의 HTML은 읽을 수 있습니다. Worker는 로그인하지 않은 저장 요청에 HTTP 401을 반환합니다.</p></div>
         <div><strong>소유자 경로</strong><p>GitHub ID <code>88140361</code>로 로그인한 세션만 저장할 수 있습니다. 다른 ID는 로그인 콜백에서 HTTP 403을 받습니다.</p></div>
@@ -71,30 +71,30 @@
           <article class="step active" id="s1">
             <span class="step-kicker">01 · Artifact repository · 2026-10-07</span>
             <h3>문서 코드와 의견 UI를 PR에 준비</h3>
-            <p><code>orange-taco/traceback-artifacts</code>가 HTML, 이미지, 작성 스킬의 원본입니다. 새 의견 링크는 배포 설정이 있을 때만 나타나고, 절 ID가 있으면 함께 전달합니다. 문구 선택은 요구하지 않습니다.</p>
+            <p><code>traceback-team/traceback-artifacts</code>가 HTML, 이미지, 작성 스킬의 원본입니다. 새 의견 링크는 배포 설정이 있을 때만 나타나고, 절 ID가 있으면 함께 전달합니다. 문구 선택은 요구하지 않습니다.</p>
             <div class="why"><strong>왜 먼저?</strong> 기능과 문서 변경을 PR로 검토하고, 배포 전 <code>verify_site.py</code>로 로컬 링크를 확인하기 위해서입니다.</div>
             <div class="screen" role="img" aria-label="Artifact PR에 Pages 문서와 Worker 코드가 있고 CodeRabbit 검사 결과가 통과한 화면 재현">
-              <div class="screen-bar"><span>github.com / orange-taco / traceback-artifacts</span><b>화면 재현</b></div>
+              <div class="screen-bar"><span>github.com / traceback-team / traceback-artifacts</span><b>화면 재현</b></div>
               <div class="screen-body"><div class="screen-title">PR #1 · 공개 가이드에 의견 링크 추가</div><p class="screen-help">HTML · feedback.js · Worker · 테스트 · Pages workflow</p><div class="ui-row"><strong>CodeRabbit 리뷰</strong><span class="pill">검토 완료</span></div><div class="ui-row"><strong>문서 내부 링크</strong><span class="pill">8개 검사</span></div><div class="ui-row"><strong>게시</strong><span class="pill">main · Pages 성공</span></div></div>
               <div class="screen-caption">PR 검토 성공과 공개 Pages 게시 성공은 서로 다른 확인 단계입니다.</div>
             </div>
-            <div class="code-card"><header><span>정확한 코드 발췌 · feedback.js 23–29행</span><a href="https://github.com/orange-taco/traceback-artifacts/blob/55287f3374e9752c4ac9b3171feb7e6c95cba137/docs/artifact/feedback.js#L23-L29">확인한 revision에서 보기</a></header><pre><code>const target = new URL("/new", worker);
+            <div class="code-card"><header><span>정확한 코드 발췌 · feedback.js 23–29행</span><a href="https://github.com/traceback-team/traceback-artifacts/blob/55287f3374e9752c4ac9b3171feb7e6c95cba137/docs/artifact/feedback.js#L23-L29">확인한 revision에서 보기</a></header><pre><code>const target = new URL("/new", worker);
 target.searchParams.set("doc", location.origin + location.pathname);
 target.searchParams.set("rev", revision);
 let section = "";
 try { section = decodeURIComponent(location.hash.slice(1)); } catch { /* Invalid fragments are treated as the whole document. */ }
 if (section && document.getElementById(section)) target.searchParams.set("section", section);
 link.href = target.href;</code></pre><p>Pages 브라우저가 Worker의 새 의견 화면으로 이동할 때 문서·revision·유효한 절 ID를 보냅니다. 절이 없으면 문서 전체를 대상으로 삼습니다.</p></div>
-            <details><summary>다시 실행할 때 · verify_site.py의 범위</summary><ol class="recipe"><li>이 저장소에서 변경 브랜치와 PR을 만듭니다.</li><li><code>python3 scripts/verify_site.py</code>를 실행합니다. <a href="https://github.com/orange-taco/traceback-artifacts/blob/55287f3374e9752c4ac9b3171feb7e6c95cba137/scripts/verify_site.py#L35-L56">검사 코드</a>는 모든 HTML의 로컬 <code>href</code>·<code>src</code> 대상과 HTML fragment ID를 찾습니다. 외부 URL은 검사하지 않습니다.</li><li>CodeRabbit과 PR 검사 결과를 확인합니다. 이 스크립트만으로 실제 Pages 배포, Worker 로그인, GitHub 파일 저장은 검증되지 않으므로 08단계에서 따로 확인합니다.</li></ol></details>
+            <details><summary>다시 실행할 때 · verify_site.py의 범위</summary><ol class="recipe"><li>이 저장소에서 변경 브랜치와 PR을 만듭니다.</li><li><code>python3 scripts/verify_site.py</code>를 실행합니다. <a href="https://github.com/traceback-team/traceback-artifacts/blob/55287f3374e9752c4ac9b3171feb7e6c95cba137/scripts/verify_site.py#L35-L56">검사 코드</a>는 모든 HTML의 로컬 <code>href</code>·<code>src</code> 대상과 HTML fragment ID를 찾습니다. 외부 URL은 검사하지 않습니다.</li><li>CodeRabbit과 PR 검사 결과를 확인합니다. 이 스크립트만으로 실제 Pages 배포, Worker 로그인, GitHub 파일 저장은 검증되지 않으므로 08단계에서 따로 확인합니다.</li></ol></details>
           </article>
 
           <article class="step" id="s2">
             <span class="step-kicker">02 · One public repository · 2026-10-08</span>
             <h3>공개 의견을 문서 저장소 안에 보관</h3>
-            <p>의견을 공개해도 괜찮다는 결정에 따라 <code>orange-taco/traceback-artifacts</code> 안의 <code>feedback/</code>를 저장 위치로 정했습니다. Worker는 의견 하나당 <code>ID.json</code>을 <code>main</code>에 추가합니다. 누구나 파일을 읽을 수 있습니다.</p>
+            <p>의견을 공개해도 괜찮다는 결정에 따라 <code>traceback-team/traceback-artifacts</code> 안의 <code>feedback/</code>를 저장 위치로 정했습니다. Worker는 의견 하나당 <code>ID.json</code>을 <code>main</code>에 추가합니다. 누구나 파일을 읽을 수 있습니다.</p>
             <div class="why"><strong>왜 바꿨나?</strong> 처음에는 비공개가 필요해 <code>oscar2272/traceback-feedback</code>를 만들었습니다. 공개를 허용하면서 별도 저장소와 Codex의 네 번째 연결이 불필요해졌습니다. 이 저장소는 이전 설정의 기록일 뿐, 새 의견의 대상이 아닙니다.</div>
             <div class="screen" role="img" aria-label="같은 공개 저장소 안에 문서와 의견 파일을 각각 보관하는 구조 재현">
-              <div class="screen-bar"><span>GitHub / orange-taco / traceback-artifacts</span><b>구조 재현</b></div>
+              <div class="screen-bar"><span>GitHub / traceback-team / traceback-artifacts</span><b>구조 재현</b></div>
               <div class="screen-body"><div class="screen-title">traceback-artifacts <span class="pill">Public</span></div><div class="ui-row"><strong>docs/artifact/</strong><span>Pages에 게시하는 HTML·이미지</span></div><div class="ui-row"><strong>feedback/</strong><span>누구나 읽는 의견 JSON</span></div><div class="ui-row"><strong>Codex Cloud</strong><span>이미 연결한 문서 저장소에서 읽기</span></div></div>
               <div class="screen-caption">Pages workflow의 push 경로는 <code>feedback/**</code>를 포함하지 않아 의견만 추가한 커밋은 사이트를 다시 배포하지 않습니다.</div>
             </div>
@@ -111,25 +111,25 @@ link.href = target.href;</code></pre><p>Pages 브라우저가 Worker의 새 의�
               <div class="screen-body"><div class="screen-title">traceback-feedback <span class="pill">배포됨</span></div><p class="screen-help"><code>https://traceback-feedback.traceback-feedback-worker.workers.dev</code></p><div class="ui-row"><strong>GET /healthz</strong><span class="pill">HTTP 200</span></div><div class="ui-row"><strong>POST /api/feedback · 익명</strong><span class="pill gray">HTTP 401</span></div><div class="ui-row"><strong>수정·실행 API</strong><span class="pill gray">없음 · 404</span></div></div>
               <div class="screen-caption">상태 응답은 Worker 동작만 증명합니다. GitHub 저장 성공은 08단계에서 별도로 확인합니다.</div>
             </div>
-            <div class="code-card"><header><span>정확한 설정 발췌 · wrangler.toml 6–10행</span><a href="https://github.com/orange-taco/traceback-artifacts/blob/c1802be4fd12fb5840e5f776aa1ae4c759aa24aa/feedback-worker/wrangler.toml#L6-L10">확인한 revision에서 보기</a></header><pre><code>[vars]
-GITHUB_OWNER = "orange-taco"
+            <div class="code-card"><header><span>정확한 설정 발췌 · wrangler.toml 6–10행</span><a href="https://github.com/traceback-team/traceback-artifacts/blob/c1802be4fd12fb5840e5f776aa1ae4c759aa24aa/feedback-worker/wrangler.toml#L6-L10">확인한 revision에서 보기</a></header><pre><code>[vars]
+GITHUB_OWNER = "traceback-team"
 FEEDBACK_REPO = "traceback-artifacts"
 ALLOWED_GITHUB_USER_ID = "88140361"
-PUBLIC_SITE_ORIGIN = "https://orange-taco.github.io"</code></pre><p>Worker가 이 공개 설정을 읽어 허용 GitHub ID, 기록 대상 저장소와 허용 문서 출처를 확인합니다. 인증 비밀값은 이 파일에 넣지 않습니다.</p></div>
+PUBLIC_SITE_ORIGIN = "https://traceback-team.github.io"</code></pre><p>Worker가 이 공개 설정을 읽어 허용 GitHub ID, 기록 대상 저장소와 허용 문서 출처를 확인합니다. 인증 비밀값은 이 파일에 넣지 않습니다.</p></div>
             <details><summary>다시 배포할 때</summary><ol class="recipe"><li><code>feedback-worker/</code>에서 <code>npm ci</code> 후 <code>npx wrangler login</code>으로 본인 Cloudflare 계정에 로그인합니다.</li><li>App 설치 ID가 조직 저장소를 가리키는지 확인한 뒤 <code>npx wrangler deploy</code>를 실행합니다.</li><li><code>curl -i https://…/healthz</code>가 200인지 확인합니다. 이 응답만으로 실제 GitHub 저장은 증명되지 않습니다.</li></ol></details>
           </article>
 
           <article class="step" id="s4">
             <span class="step-kicker">04 · GitHub App · 조직 설치 완료</span>
             <h3>App을 문서 저장소에만 설치</h3>
-            <p>처음 만든 개인 소유 비공개 App <strong>TRACEBACK Feedback Oscar2272</strong>는 개인 의견 저장소에만 설치되어 있었습니다. <a href="https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/making-a-github-app-public-or-private">비공개 GitHub App은 소유 계정에만 설치</a>할 수 있어 2026년 10월 8일 App을 <code>orange-taco</code> 조직으로 이전했습니다. GitHub 화면에서 새 소유자와 기존 App ID·Client ID 유지를 확인했습니다. 이전 완료와 함께 개인 계정 설치는 자동 제거됐습니다. App 설명도 공개 의견 저장과 Codex 작업 미실행을 알리도록 수정했습니다.</p>
+            <p>처음 만든 개인 소유 비공개 App <strong>TRACEBACK Feedback Oscar2272</strong>는 개인 의견 저장소에만 설치되어 있었습니다. <a href="https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/making-a-github-app-public-or-private">비공개 GitHub App은 소유 계정에만 설치</a>할 수 있어 2026년 10월 8일 App을 당시 <code>orange-taco</code>(현재 <code>traceback-team</code>) 조직으로 이전했습니다. GitHub 화면에서 새 소유자와 기존 App ID·Client ID 유지를 확인했습니다. 이전 완료와 함께 개인 계정 설치는 자동 제거됐습니다. App 설명도 공개 의견 저장과 Codex 작업 미실행을 알리도록 수정했습니다.</p>
             <div class="why"><strong>두 토큰의 역할:</strong> OAuth 사용자 토큰은 <code>/user</code>로 소유자를 확인한 뒤 버립니다. App 설치 토큰은 Worker가 짧게 발급받아 의견 JSON 한 건을 씁니다.</div>
             <div class="screen" role="img" aria-label="전환 전 GitHub App 설치 화면 재현: 개인 의견 저장소 하나, Contents read/write">
               <div class="screen-bar"><span>GitHub / Apps / TRACEBACK Feedback Oscar2272</span><b>화면 재현</b></div>
               <div class="screen-body"><div class="screen-title">Install on oscar2272</div><div class="ui-row"><strong>Repository access</strong><span class="pill">Only select repositories</span></div><div class="ui-row"><strong>선택한 저장소</strong><span>oscar2272/traceback-feedback</span></div><div class="ui-row"><strong>Repository permissions</strong><span>Metadata 읽기 · Contents 읽기/쓰기</span></div><div class="ui-row"><strong>App ID · 설치 ID</strong><span>5232748 · 169112765</span></div><div class="ui-row"><strong>Client ID</strong><span>Iv23liEhxT16HdVO5bvG</span></div><div class="ui-row"><strong>Callback</strong><span><code>…workers.dev/oauth/callback</code></span></div></div>
-              <div class="screen-caption">이 화면은 이전 경로의 기록입니다. 2026-10-08에 조직 <code>orange-taco</code>의 <code>traceback-artifacts</code>만 선택해 설치했습니다(설치 ID <code>169215439</code>). GitHub 권한은 저장소 Contents 전체에 적용되므로 Worker 코드가 기록 경로를 <code>feedback/</code>로 제한합니다.</div>
+              <div class="screen-caption">이 화면은 이전 경로의 기록입니다. 2026-10-08에 당시 조직 <code>orange-taco</code>(현재 <code>traceback-team</code>)의 <code>traceback-artifacts</code>만 선택해 설치했습니다(설치 ID <code>169215439</code>). GitHub 권한은 저장소 Contents 전체에 적용되므로 Worker 코드가 기록 경로를 <code>feedback/</code>로 제한합니다.</div>
             </div>
-            <details><summary>전환할 때</summary><ol class="recipe"><li><a href="https://docs.github.com/en/apps/maintaining-github-apps/transferring-ownership-of-a-github-app">기존 App을 orange-taco로 이전</a>하고 조직 소유 상태를 확인합니다.</li><li>callback은 <code>https://traceback-feedback.traceback-feedback-worker.workers.dev/oauth/callback</code>으로 유지하고 웹훅은 끕니다.</li><li>Repository permission은 Contents 읽기/쓰기로 제한하며, <strong>Only select repositories</strong>에서 <code>traceback-artifacts</code>만 골라 설치합니다.</li><li>새 조직 설치 ID를 Worker secret에 등록합니다. 비밀값은 공개 문서에 적지 않습니다.</li></ol></details>
+            <details><summary>전환할 때</summary><ol class="recipe"><li><a href="https://docs.github.com/en/apps/maintaining-github-apps/transferring-ownership-of-a-github-app">기존 App을 대상 조직으로 이전</a>하고 조직 소유 상태를 확인합니다.</li><li>callback은 <code>https://traceback-feedback.traceback-feedback-worker.workers.dev/oauth/callback</code>으로 유지하고 웹훅은 끕니다.</li><li>Repository permission은 Contents 읽기/쓰기로 제한하며, <strong>Only select repositories</strong>에서 <code>traceback-artifacts</code>만 골라 설치합니다.</li><li>새 조직 설치 ID를 Worker secret에 등록합니다. 비밀값은 공개 문서에 적지 않습니다.</li></ol></details>
           </article>
 
           <article class="step" id="s5">
@@ -155,7 +155,7 @@ PUBLIC_SITE_ORIGIN = "https://orange-taco.github.io"</code></pre><p>Worker가 �
               <div class="screen-body"><div class="screen-title">FEEDBACK_WORKER_ORIGIN</div><p class="screen-help"><code>https://traceback-feedback.traceback-feedback-worker.workers.dev</code></p><div class="ui-row"><strong>PR · CodeRabbit 검토</strong><span class="pill">통과</span></div><div class="ui-row"><strong>main 병합</strong><span>Pages workflow 실행</span></div><div class="ui-row"><strong>site-config.json</strong><span>게시 SHA · Worker origin</span></div></div>
               <div class="screen-caption">이 변수는 공개 주소입니다. Worker secret은 Actions variable에 넣지 않습니다.</div>
             </div>
-            <div class="code-card"><header><span>정확한 코드 발췌 · pages.yml 44–50행</span><a href="https://github.com/orange-taco/traceback-artifacts/blob/55287f3374e9752c4ac9b3171feb7e6c95cba137/.github/workflows/pages.yml#L44-L50">확인한 revision에서 보기</a></header><pre><code>origin = os.environ.get("FEEDBACK_WORKER_ORIGIN", "").rstrip("/")
+            <div class="code-card"><header><span>정확한 코드 발췌 · pages.yml 44–50행</span><a href="https://github.com/traceback-team/traceback-artifacts/blob/55287f3374e9752c4ac9b3171feb7e6c95cba137/.github/workflows/pages.yml#L44-L50">확인한 revision에서 보기</a></header><pre><code>origin = os.environ.get("FEEDBACK_WORKER_ORIGIN", "").rstrip("/")
 if origin:
     parsed = urlsplit(origin)
     if parsed.scheme != "https" or not parsed.hostname or parsed.path or parsed.query or parsed.fragment:
@@ -172,7 +172,7 @@ if origin:
             <div class="why"><strong>왜 추가 연결이 없나?</strong> Codex Cloud는 환경에 연결된 저장소를 checkout합니다. 이제 의견 파일이 이미 연결한 문서 저장소에 들어가므로 같은 작업에서 바로 열 수 있습니다.</div>
             <div class="screen" role="img" aria-label="Codex Cloud 개인 환경 화면 재현: 세 저장소, 사용 대상 나만">
               <div class="screen-bar"><span>ChatGPT / Settings / Codex Cloud / Environments</span><b>화면 재현</b></div>
-              <div class="screen-body"><div class="screen-title">TRACEBACK Study (3 repos)</div><div class="ui-row"><strong>코드 원본</strong><span>orange-taco/traceback</span></div><div class="ui-row"><strong>프런트 원본</strong><span>orange-taco/traceback-client</span></div><div class="ui-row"><strong>문서와 의견</strong><span>orange-taco/traceback-artifacts</span></div><div class="ui-row"><strong>사용 가능 대상</strong><span class="pill">나만</span></div></div>
+              <div class="screen-body"><div class="screen-title">TRACEBACK Study (3 repos)</div><div class="ui-row"><strong>코드 원본</strong><span>traceback-team/traceback</span></div><div class="ui-row"><strong>프런트 원본</strong><span>traceback-team/traceback-client</span></div><div class="ui-row"><strong>문서와 의견</strong><span>traceback-team/traceback-artifacts</span></div><div class="ui-row"><strong>사용 가능 대상</strong><span class="pill">나만</span></div></div>
               <div class="screen-caption">공개 저장소의 의견 파일은 연결한 문서 checkout 안에 있습니다. 새 작업을 시작해 실제 파일 읽기를 확인해야 합니다.</div>
             </div>
             <details><summary>새 작업에서 읽을 때</summary><ol class="recipe"><li>Codex Cloud에서 게시된 <strong>TRACEBACK Study (3 repos)</strong> 환경을 선택합니다.</li><li><code>traceback-artifacts/feedback/&lt;id&gt;.json</code>을 읽고 의견만 정리해 달라고 요청할 수 있습니다.</li><li>수정이 필요하면 별도 요청에서 대상 HTML의 변경과 PR을 지시합니다.</li><li>기존 Cloud 작업이 새 의견 파일을 자동으로 받았다고 가정하지 말고 새 작업에서 읽기를 확인합니다.</li></ol></details>
@@ -181,7 +181,7 @@ if origin:
           <article class="step" id="s8">
             <span class="step-kicker">08 · Live verification</span>
             <h3>iPad 흐름과 서버 거부를 각각 확인</h3>
-            <p>단일 저장소 전환 뒤 2026-10-08에 소유자 세션으로 실제 의견 ID <a href="https://github.com/orange-taco/traceback-artifacts/blob/main/feedback/420fb0e8-4448-4c3e-a70d-d674fef43d1b.json"><code>420fb0e8-4448-4c3e-a70d-d674fef43d1b</code></a>을 저장했습니다. 공개 JSON의 문서 URL, 절 ID(null), 선택 문구(null), 위치, 의견, 게시 revision, 작성자 ID <code>88140361</code>을 확인했습니다. 새 양식을 834px 폭으로 확인했습니다.</p>
+            <p>단일 저장소 전환 뒤 2026-10-08에 소유자 세션으로 실제 의견 ID <a href="https://github.com/traceback-team/traceback-artifacts/blob/main/feedback/420fb0e8-4448-4c3e-a70d-d674fef43d1b.json"><code>420fb0e8-4448-4c3e-a70d-d674fef43d1b</code></a>을 저장했습니다. 공개 JSON의 문서 URL, 절 ID(null), 선택 문구(null), 위치, 의견, 게시 revision, 작성자 ID <code>88140361</code>을 확인했습니다. 새 양식을 834px 폭으로 확인했습니다.</p>
             <div class="why"><strong>검증 경계:</strong> UI가 버튼을 숨기더라도 서버 검사가 최종 기준입니다. 익명 저장은 실서버 401, 다른 계정은 Worker 테스트에서 403, 수정·실행 경로는 404를 확인했습니다. 다른 계정의 실제 GitHub 로그인 시험은 수행하지 않았습니다.</div>
             <div class="screen" role="img" aria-label="iPad 의견 저장 화면 재현: 문서 URL, 전체 문서, 위치, 의견, 의견만 저장">
               <div class="screen-bar"><span>iPad Safari 흐름 · Pages → Worker</span><b>양식 재현</b></div>
@@ -195,10 +195,10 @@ if origin:
               <div class="screen-body"><div class="screen-title">의견을 저장했습니다</div><p class="screen-help">의견 파일은 공개 저장소의 feedback/에 있습니다. Codex 작업은 아직 시작되지 않았습니다.</p><div class="ui-row"><strong>모든 의견을 한 번에 검토</strong><span class="mock-button">요청 복사</span></div><div class="ui-row"><strong>이번 의견만 검토</strong><span>접어서 선택</span></div><div class="ui-row"><strong>다음 단계</strong><span>Codex Cloud 열기 → 새 작업에 붙여넣기 → 보내기</span></div></div>
               <div class="screen-caption">나중에 돌아와도 의견 양식의 <code>/handoff</code> 링크에서 전체 의견 요청문을 다시 만들 수 있습니다. Pages나 Worker가 작업을 자동 제출하지는 않습니다.</div>
             </div>
-            <div class="code-card"><header><span>한 번에 요청하는 문구 · index.js 247–249행</span><a href="https://github.com/orange-taco/traceback-artifacts/blob/9ad9b021d7dbdef0c114b7135166e6116698673e/feedback-worker/src/index.js#L247-L249">확인한 revision에서 보기</a></header><pre><code>function batchPrompt(recent = "") {
-  return `TRACEBACK Study (3 repos) Codex Cloud 환경에서 orange-taco/traceback-artifacts의 feedback/*.json을 모두 읽어 주세요.${recent} 각 의견의 document_url, section_id, location, comment, document_revision을 확인하고 현재 HTML 및 관련 원본 코드와 비교하세요. 중복되거나 이미 반영된 의견은 구분하고, 타당한 의견만 한 번의 아티팩트 변경으로 정리해 주세요. AGENTS.md와 auth-flow-visualizer 스킬을 따르고 python3 scripts/verify_site.py 및 좁은 화면과 데스크톱 화면을 확인하세요. 변경 이유와 반영하지 않은 의견을 설명하고 문서 PR을 만들어 주세요. 자동 병합은 하지 마세요.`;
+            <div class="code-card"><header><span>한 번에 요청하는 문구 · index.js 247–249행</span><a href="https://github.com/traceback-team/traceback-artifacts/blob/9ad9b021d7dbdef0c114b7135166e6116698673e/feedback-worker/src/index.js#L247-L249">확인한 revision에서 보기</a></header><pre><code>function batchPrompt(recent = "") {
+  return `TRACEBACK Study (3 repos) Codex Cloud 환경에서 traceback-team/traceback-artifacts의 feedback/*.json을 모두 읽어 주세요.${recent} 각 의견의 document_url, section_id, location, comment, document_revision을 확인하고 현재 HTML 및 관련 원본 코드와 비교하세요. 중복되거나 이미 반영된 의견은 구분하고, 타당한 의견만 한 번의 아티팩트 변경으로 정리해 주세요. AGENTS.md와 auth-flow-visualizer 스킬을 따르고 python3 scripts/verify_site.py 및 좁은 화면과 데스크톱 화면을 확인하세요. 변경 이유와 반영하지 않은 의견을 설명하고 문서 PR을 만들어 주세요. 자동 병합은 하지 마세요.`;
 }</code></pre><p>Worker는 요청문을 만들어 복사를 돕습니다. Codex Cloud에 보내는 행위는 사용자에게 남겨 저장 API와 수정 작업을 분리합니다.</p></div>
-            <div class="code-card"><header><span>정확한 코드 발췌 · index.js 211–219행</span><a href="https://github.com/orange-taco/traceback-artifacts/blob/55287f3374e9752c4ac9b3171feb7e6c95cba137/feedback-worker/src/index.js#L211-L219">확인한 revision에서 보기</a></header><pre><code>async function submit(request, env, url) {
+            <div class="code-card"><header><span>정확한 코드 발췌 · index.js 211–219행</span><a href="https://github.com/traceback-team/traceback-artifacts/blob/55287f3374e9752c4ac9b3171feb7e6c95cba137/feedback-worker/src/index.js#L211-L219">확인한 revision에서 보기</a></header><pre><code>async function submit(request, env, url) {
   const owner = await session(request, env);
   if (!owner) return new Response("Unauthorized", { status: 401 });
   if (request.headers.get("Origin") !== url.origin) return new Response("Forbidden origin", { status: 403 });
@@ -230,8 +230,8 @@ if origin:
       <div class="failure">
         <details><summary>Pages에 의견 버튼이 없다</summary><p><code>FEEDBACK_WORKER_ORIGIN</code> 변수, Pages workflow 성공, 공개 <code>site-config.json</code>의 revision과 origin을 순서대로 확인합니다. HTML은 계속 읽을 수 있습니다.</p></details>
         <details><summary>GitHub 로그인 뒤 양식이 안 열린다</summary><p>GitHub App callback이 Worker origin의 <code>/oauth/callback</code>과 정확히 같은지, client secret이 Worker secret에 있는지 확인합니다. 브라우저 URL에 secret을 넣지 않습니다.</p></details>
-        <details><summary>의견 저장에 실패한다</summary><p>App 설치 대상이 <code>orange-taco/traceback-artifacts</code> 한 곳인지, 조직의 설치 ID와 private key가 Worker secret에 있는지 확인합니다. Worker 오류를 보고 GitHub 토큰 발급 실패와 파일 쓰기 실패를 구분합니다.</p></details>
-        <details><summary>Codex에서 의견 파일이 안 보인다</summary><p>게시된 환경에 <code>orange-taco/traceback-artifacts</code>가 연결되어 있는지 확인합니다. 의견 파일이 <code>main</code>에 올라간 뒤 새 Cloud 작업을 시작해 읽습니다.</p></details>
+        <details><summary>의견 저장에 실패한다</summary><p>App 설치 대상이 <code>traceback-team/traceback-artifacts</code> 한 곳인지, 조직의 설치 ID와 private key가 Worker secret에 있는지 확인합니다. Worker 오류를 보고 GitHub 토큰 발급 실패와 파일 쓰기 실패를 구분합니다.</p></details>
+        <details><summary>Codex에서 의견 파일이 안 보인다</summary><p>게시된 환경에 <code>traceback-team/traceback-artifacts</code>가 연결되어 있는지 확인합니다. 의견 파일이 <code>main</code>에 올라간 뒤 새 Cloud 작업을 시작해 읽습니다.</p></details>
       </div>
     </section>
 
@@ -239,13 +239,13 @@ if origin:
       <h2 id="refs-title">근거와 다시 열 위치</h2>
       <p>처음 게시한 코드 링크는 <code>55287f3374e9752c4ac9b3171feb7e6c95cba137</code>, 단일 저장소 설정 링크는 <code>c1802be4fd12fb5840e5f776aa1ae4c759aa24aa</code>에 고정했습니다. 콘솔·Cloud 설정은 2026년 10월 8일 관찰값이므로 나중에 바뀔 수 있습니다.</p>
       <ul>
-        <li><a href="https://github.com/orange-taco/traceback-artifacts/pull/1">문서·Worker 구현 PR</a> · CodeRabbit 검토 및 병합 상태</li>
-        <li><a href="https://github.com/orange-taco/traceback-artifacts/blob/c1802be4fd12fb5840e5f776aa1ae4c759aa24aa/feedback-worker/README.md">Worker 재설정 README</a> · 명령과 secret 목록</li>
-        <li><a href="https://github.com/orange-taco/traceback-artifacts/blob/55287f3374e9752c4ac9b3171feb7e6c95cba137/feedback-worker/test/authorization.test.js">권한 테스트 원문</a> · 소유자·다른 사용자·Origin·CSRF·실행 API 부재</li>
-        <li><a href="https://orange-taco.github.io/traceback-artifacts/">공개 Pages 시작 주소</a> · 누구나 읽는 문서</li>
+        <li><a href="https://github.com/traceback-team/traceback-artifacts/pull/1">문서·Worker 구현 PR</a> · CodeRabbit 검토 및 병합 상태</li>
+        <li><a href="https://github.com/traceback-team/traceback-artifacts/blob/c1802be4fd12fb5840e5f776aa1ae4c759aa24aa/feedback-worker/README.md">Worker 재설정 README</a> · 명령과 secret 목록</li>
+        <li><a href="https://github.com/traceback-team/traceback-artifacts/blob/55287f3374e9752c4ac9b3171feb7e6c95cba137/feedback-worker/test/authorization.test.js">권한 테스트 원문</a> · 소유자·다른 사용자·Origin·CSRF·실행 API 부재</li>
+        <li><a href="https://traceback-team.github.io/traceback-artifacts/">공개 Pages 시작 주소</a> · 누구나 읽는 문서</li>
         <li><a href="https://developers.cloudflare.com/workers/platform/pricing/">Cloudflare Workers 요금 안내</a> · 무료 요청 한도 확인</li>
         <li><a href="https://docs.github.com/en/pages/quickstart">GitHub Pages 지원 플랜</a> · 공개 저장소의 Free 사용</li>
-        <li><a href="https://github.com/orange-taco/traceback-artifacts/blob/c1802be4fd12fb5840e5f776aa1ae4c759aa24aa/feedback/README.md">공개 의견 폴더 설명</a> · 같은 저장소의 파일 보관과 읽기 범위</li>
+        <li><a href="https://github.com/traceback-team/traceback-artifacts/blob/c1802be4fd12fb5840e5f776aa1ae4c759aa24aa/feedback/README.md">공개 의견 폴더 설명</a> · 같은 저장소의 파일 보관과 읽기 범위</li>
         <li><a href="https://developers.openai.com/codex/environments/cloud-environments">Codex Cloud 환경 안내</a> · 저장소 연결, 재게시와 새 작업</li>
         <li><a href="https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan">Codex와 ChatGPT 플랜</a> · Plus 포함 사용량과 한도</li>
       </ul>

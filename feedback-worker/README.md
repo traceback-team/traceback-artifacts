@@ -1,9 +1,9 @@
 # Owner-only feedback for TRACEBACK artifacts
 
-The public guides stay at `https://orange-taco.github.io/traceback-artifacts/`.
+The public guides stay at `https://traceback-team.github.io/traceback-artifacts/`.
 This Worker provides a separate iPad-friendly feedback form. After checking the
 signed-in GitHub account's numeric ID, it writes public JSON files under
-`orange-taco/traceback-artifacts/feedback/`. Anyone can read the opinions;
+`traceback-team/traceback-artifacts/feedback/`. Anyone can read the opinions;
 only the owner can submit through this form. Saving feedback never starts
 Codex or edits a guide. The saved page offers copyable prompts for the newest
 opinion or every `feedback/*.json`, then opens Codex Cloud. The owner selects
@@ -19,14 +19,14 @@ ChatGPT plan and its limits.
 
 ## One-time setup
 
-1. Use the existing public `orange-taco/traceback-artifacts` repository. The
+1. Use the existing public `traceback-team/traceback-artifacts` repository. The
    Worker creates `feedback/<id>.json` on `main`; the Pages workflow runs only
    for `docs/artifact/**`, its own workflow, or `scripts/verify_site.py`, so a
    feedback-only commit does not deploy the site.
 2. In Cloudflare's free Workers plan, run `npm ci`, sign in with
    `npx wrangler login`, then run `npx wrangler deploy` here to obtain the Worker
    HTTPS URL. The `workers.dev` URL is suitable for this small personal form.
-3. Use a GitHub App that can be installed on the `orange-taco` organization:
+3. Use a GitHub App that can be installed on the `traceback-team` organization:
    [transfer ownership of the existing App](https://docs.github.com/en/apps/maintaining-github-apps/transferring-ownership-of-a-github-app)
    to the organization and keep it private, register a new organization-owned
    private App, or make the existing personal App public. Set its website URL
@@ -60,13 +60,13 @@ ChatGPT plan and its limits.
    artifact repository for each save. The login token is used only to identify
    the GitHub user and is discarded after the callback.
 5. Set the **repository Actions variable** `FEEDBACK_WORKER_ORIGIN` in
-   `orange-taco/traceback-artifacts` to the Worker HTTPS origin, with no path or
+   `traceback-team/traceback-artifacts` to the Worker HTTPS origin, with no path or
    trailing slash. Run the Pages workflow or merge a change to `main`. The
    workflow writes `site-config.json` with the exact deployed Git revision and
    Worker origin. The shared script shows the feedback link on each guide only
    when this config exists.
 6. Keep the personal Codex Cloud environment's existing three repositories,
-   including `orange-taco/traceback-artifacts`. In a new Cloud task, ask Codex
+   including `traceback-team/traceback-artifacts`. In a new Cloud task, ask Codex
    to read `feedback/<id>.json` or all `feedback/*.json` from that repository.
    The saved page prepares either prompt. The user must send it in Codex Cloud;
    saving never triggers a task. Ask Codex to assess each opinion, revise the

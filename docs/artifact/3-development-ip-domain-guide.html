@@ -75,9 +75,9 @@ Name: api.dev-traceback.com  Type: A  TTL: 300  Value: 3.34.78.140
 
 Vercel Production 환경변수 (2026-10-03 저장, 2026-10-04 재배포 적용)
 DJANGO_ORIGIN=https://api.dev-traceback.com</code></pre>
-      <div class="source-label">정확한 코드 · <a href="https://github.com/orange-taco/traceback-client/blob/development/vercel.ts#L1">traceback-client/vercel.ts 1행</a></div>
+      <div class="source-label">정확한 코드 · <a href="https://github.com/traceback-team/traceback-client/blob/development/vercel.ts#L1">traceback-client/vercel.ts 1행</a></div>
       <pre class="config-source"><code>1 │ const configuredOrigin = process.env.DJANGO_ORIGIN?.trim();</code></pre>
-      <p class="extracted-inline-3">Route 53은 A 레코드를 DNS 응답으로 사용합니다. Vercel은 배포할 때 <a href="https://github.com/orange-taco/traceback-client/blob/development/vercel.ts">client의 <code>vercel.ts</code></a>가 읽는 <code>DJANGO_ORIGIN</code>으로 API rewrite를 만듭니다. 저장소에 AWS DNS 설정용 IaC 파일은 없으므로 위 첫 두 줄은 현재 콘솔값을 읽기 쉬운 형태로 옮긴 것입니다. Vercel은 2026-10-04 재배포로 rewrite가 적용됐지만 API HTTPS 연결이 거부되어 인증 요청은 아직 502입니다.</p>
+      <p class="extracted-inline-3">Route 53은 A 레코드를 DNS 응답으로 사용합니다. Vercel은 배포할 때 <a href="https://github.com/traceback-team/traceback-client/blob/development/vercel.ts">client의 <code>vercel.ts</code></a>가 읽는 <code>DJANGO_ORIGIN</code>으로 API rewrite를 만듭니다. 저장소에 AWS DNS 설정용 IaC 파일은 없으므로 위 첫 두 줄은 현재 콘솔값을 읽기 쉬운 형태로 옮긴 것입니다. Vercel은 2026-10-04 재배포로 rewrite가 적용됐지만 API HTTPS 연결이 거부되어 인증 요청은 아직 502입니다.</p>
     </div>
   </section>
 

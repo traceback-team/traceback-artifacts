@@ -4,11 +4,11 @@ TRACEBACK의 학습용 시각 문서를 백엔드 코드와 독립적으로 관�
 
 - 문서 시작: [`docs/artifact/index.html`](docs/artifact/index.html)
 - 문서 프로젝트 설정 기록: [`docs/artifact/artifact-feedback-operations.html`](docs/artifact/artifact-feedback-operations.html)
-- iPad 읽기 주소: [TRACEBACK 학습 목차](https://orange-taco.github.io/traceback-artifacts/)
+- iPad 읽기 주소: [TRACEBACK 학습 목차](https://traceback-team.github.io/traceback-artifacts/)
 - 문서 작성 기준: [`.codex/skills/auth-flow-visualizer/SKILL.md`](.codex/skills/auth-flow-visualizer/SKILL.md)
 - 학습 흐름 설계·점검: [`.codex/skills/question-led-learning/SKILL.md`](.codex/skills/question-led-learning/SKILL.md)
-- 설명의 근거가 되는 백엔드 코드: [`orange-taco/traceback`](https://github.com/orange-taco/traceback)
-- 프런트·Vercel 코드: [`orange-taco/traceback-client`](https://github.com/orange-taco/traceback-client)
+- 설명의 근거가 되는 백엔드 코드: [`traceback-team/traceback`](https://github.com/traceback-team/traceback)
+- 프런트·Vercel 코드: [`traceback-team/traceback-client`](https://github.com/traceback-team/traceback-client)
 
 ## 어디서 무엇을 수정하나요?
 
@@ -29,10 +29,11 @@ TRACEBACK의 학습용 시각 문서를 백엔드 코드와 독립적으로 관�
 [`PostgreSQL · InnoDB 탐색기`](docs/artifact/topics/database-systems/storage/postgresql-innodb/index.html)로
 이어집니다.
 스토리지 엔진은
-[`Database Engine과 SQL 처리`](docs/artifact/topics/database-systems/storage-engine/overview/index.html)에서
-공통 역할과 SQL 처리 흐름을 먼저 익힌 뒤,
-[`스토리지 엔진 종류와 내부 구조`](docs/artifact/topics/database-systems/storage-engine/types-and-internals/index.html)에서
-InnoDB·SQLite 저장 계층·RocksDB의 읽기·쓰기 구조를 비교합니다.
+[`DBMS와 Engine의 결합 형태`](docs/artifact/topics/database-systems/storage-engine/overview/index.html)에서
+공통 Engine 위치를 보고 PostgreSQL·MySQL/InnoDB·SQLite·RocksDB의 정체와 결합 형태를 구분한 뒤,
+[`PostgreSQL · MySQL/InnoDB 내부 구성`](docs/artifact/topics/database-systems/storage-engine/types-and-internals/index.html)에서
+Parser부터 Executor까지의 SQL 처리 과정과 두 서버형 DBMS의 저장 접근 경계,
+메모리·MVCC·복구 책임을 비교합니다.
 동시성·잠금도 먼저
 [`좌석 예약으로 읽는 동시성`](docs/artifact/topics/database-systems/concurrency/foundations/index.html)에서
 한 좌석의 대기·덮어쓰기와 여러 좌석의 교착, 처리 방법 및
@@ -94,8 +95,8 @@ HTML은 브라우저에서 `docs/artifact/index.html`로 열 수 있습니다. `
 
 ## 수정 흐름
 
-1. 설명 대상에 따라 `orange-taco/traceback`과
-   `orange-taco/traceback-client`의 대상 브랜치와 파일을 확인합니다.
+1. 설명 대상에 따라 `traceback-team/traceback`과
+   `traceback-team/traceback-client`의 대상 브랜치와 파일을 확인합니다.
    Cloud 환경에 세 저장소를 연결하면 iPad에 clone을 둘 필요가 없습니다.
    두 코드 저장소의 기본 브랜치는 `main`이므로, 개발 중인 내용은
    `development` 또는 대상 PR 브랜치를 명시해 확인합니다.
