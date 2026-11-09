@@ -34,6 +34,10 @@ TRACEBACK의 학습용 시각 문서를 백엔드 코드와 독립적으로 관�
 [`PostgreSQL · MySQL/InnoDB 내부 구성`](docs/artifact/topics/database-systems/storage-engine/types-and-internals/index.html)에서
 Parser부터 Executor까지의 SQL 처리 과정과 두 서버형 DBMS의 저장 접근 경계,
 메모리·MVCC·복구 책임을 비교합니다.
+이 페이지의 Engine/Access Method 경계는
+[`labs/db-engine-boundaries`](labs/db-engine-boundaries)에서 PostgreSQL 18과
+MySQL 8.4/InnoDB Container를 실행해 재현할 수 있습니다. 실행 명령과 날짜별
+관찰 결과를 함께 보관해 일반 설명과 실제 확인 상태를 구분합니다.
 동시성·잠금도 먼저
 [`좌석 예약으로 읽는 동시성`](docs/artifact/topics/database-systems/concurrency/foundations/index.html)에서
 한 좌석의 대기·덮어쓰기와 여러 좌석의 교착, 처리 방법 및
