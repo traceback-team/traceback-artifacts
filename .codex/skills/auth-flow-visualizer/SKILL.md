@@ -104,9 +104,10 @@ future domains without reducing the explanation to a table or a prose-only page.
   generic layer names unless the visual explicitly maps each generic layer to the
   previously introduced node.
 - Treat a later step as a trace over the earlier map: highlight the nodes traversed,
-  preserve their ownership colors, and add only the state change or call needed for
-  that step. Put source lines, callback catalogs, exceptions, and alternative paths
-  in local disclosure rather than replacing the large flow with a new dense diagram.
+  preserve their ownership colors, and add the state changes, verified calls, or new
+  architecture nodes needed to explain that step's responsibility boundaries. Put
+  source lines, callback catalogs, exceptions, and alternative paths in local
+  disclosure rather than replacing the large flow with a new dense diagram.
 - At every step boundary, state in one sentence what remains the same from the prior
   map and what the current step adds. A reader should not have to reconcile two
   independently named architectures to follow one request end to end.
