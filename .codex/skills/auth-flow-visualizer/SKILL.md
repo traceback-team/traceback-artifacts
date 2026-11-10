@@ -91,6 +91,27 @@ future domains without reducing the explanation to a table or a prose-only page.
   narrow and desktop viewport. The closed state must show the whole flow without
   overload, and opening one detail must not create horizontal overflow or tiny text.
 
+### Preserve the big flow across deeper steps
+
+- The learning goal is the system's large flow and responsibility boundaries, not
+  exhaustive mastery of every internal type, folder, callback, or file. Inspecting
+  internals is appropriate when it verifies who owns a step, why an arrow exists,
+  or where a replaceable boundary sits; keep unrelated implementation detail out of
+  the primary path.
+- When one step introduces concrete architecture nodes such as source folders,
+  modules, interfaces, processes, or storage components, reuse those same names and
+  visual boundaries in the next behavioral trace. Do not switch back to unrelated
+  generic layer names unless the visual explicitly maps each generic layer to the
+  previously introduced node.
+- Treat a later step as a trace over the earlier map: highlight the nodes traversed,
+  preserve their ownership colors, and add the state changes, verified calls, or new
+  architecture nodes needed to explain that step's responsibility boundaries. Put
+  source lines, callback catalogs, exceptions, and alternative paths in local
+  disclosure rather than replacing the large flow with a new dense diagram.
+- At every step boundary, state in one sentence what remains the same from the prior
+  map and what the current step adds. A reader should not have to reconcile two
+  independently named architectures to follow one request end to end.
+
 ## Accuracy checks
 
 - Verify every node, edge, state, and transition against the current source before rendering.
