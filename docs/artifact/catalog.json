@@ -70,6 +70,15 @@
           ]
         },
         {
+          "id": "nosql",
+          "title": "NoSQL",
+          "description": "RDBMS와 다른 데이터 모델의 목적을 구분하고, MongoDB 요청이 BSON·Query 처리·WiredTiger Page와 Journal로 이어지는 전체 경로를 따라갑니다.",
+          "layout": "reading-path",
+          "artifacts": [
+            {"id": "DB-NOSQL-01", "title": "NoSQL 전체 구조 · MongoDB 내부 흐름", "description": "RDBMS와의 차이, 네 가지 모델, Driver→mongod→WiredTiger와 Index·Transaction·Journal", "href": "topics/database-systems/nosql/mongodb-architecture/index.html"}
+          ]
+        },
+        {
           "id": "concurrency",
           "title": "동시성·잠금",
           "description": "좌석 예약으로 대기·데드락·중복 예약을 구분한 뒤, PostgreSQL의 INSERT 교착 상태를 더 자세히 따라갑니다.",
