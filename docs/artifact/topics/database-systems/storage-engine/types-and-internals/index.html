@@ -208,6 +208,6 @@
   const details=[...document.querySelectorAll('details')],detailState=new Map();window.addEventListener('beforeprint',()=>details.forEach(detail=>{detailState.set(detail,detail.open);detail.open=true}));window.addEventListener('afterprint',()=>details.forEach(detail=>detail.open=detailState.get(detail)));document.getElementById('print').addEventListener('click',()=>window.print());showScene(0,false);showEngine('postgres');showModuleProduct('postgres');
 })();
 </script>
-<script src="../../../../navigation.js" defer></script>
+<script src="../../../../navigation.js?v=2" defer></script>
 </body>
 </html>
