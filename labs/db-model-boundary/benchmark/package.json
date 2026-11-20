@@ -1,0 +1,9 @@
+{
+  "name": "db-model-boundary-benchmark",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "mongodb": "7.9.0",
+    "pg": "8.16.3"
+  }
+}

@@ -1,0 +1,374 @@
+{
+  "observedAt": "2026-11-20T08:31:16.962Z",
+  "versions": {
+    "postgres": "18.6 (Debian 18.6-1.pgdg13+2)",
+    "mongo": "7.0.41",
+    "node": "v24.11.1",
+    "pgDriver": "8.16.3",
+    "mongoDriver": "7.9.0"
+  },
+  "conditions": {
+    "orderCount": 30000,
+    "itemsPerOrder": 5,
+    "readIterations": 100,
+    "writeIterations": 50,
+    "seed": 20261120,
+    "loadSeconds": 3.88,
+    "cache": "warm",
+    "topology": "single-node containers"
+  },
+  "target": {
+    "targetId": 1001,
+    "targetCustomer": 2,
+    "targetStatus": "SHIPPED",
+    "targetSku": "SKU-1033"
+  },
+  "latency": {
+    "aggregateRead": {
+      "normalized": {
+        "iterations": 100,
+        "medianMs": 0.284,
+        "p95Ms": 1.294,
+        "minMs": 0.222,
+        "maxMs": 1.513
+      },
+      "jsonb": {
+        "iterations": 100,
+        "medianMs": 0.159,
+        "p95Ms": 0.235,
+        "minMs": 0.115,
+        "maxMs": 0.286
+      },
+      "mongo": {
+        "iterations": 100,
+        "medianMs": 0.419,
+        "p95Ms": 0.658,
+        "minMs": 0.287,
+        "maxMs": 0.796
+      }
+    },
+    "customerStatusRead": {
+      "normalized": {
+        "iterations": 100,
+        "medianMs": 0.189,
+        "p95Ms": 0.286,
+        "minMs": 0.112,
+        "maxMs": 0.343
+      },
+      "jsonb": {
+        "iterations": 100,
+        "medianMs": 0.214,
+        "p95Ms": 0.507,
+        "minMs": 0.136,
+        "maxMs": 0.793
+      },
+      "mongo": {
+        "iterations": 100,
+        "medianMs": 0.656,
+        "p95Ms": 1.119,
+        "minMs": 0.466,
+        "maxMs": 2.135
+      }
+    },
+    "statusUpdate": {
+      "normalized": {
+        "iterations": 50,
+        "medianMs": 0.916,
+        "p95Ms": 3.055,
+        "minMs": 0.359,
+        "maxMs": 3.992
+      },
+      "jsonb": {
+        "iterations": 50,
+        "medianMs": 0.912,
+        "p95Ms": 2.941,
+        "minMs": 0.376,
+        "maxMs": 3.654
+      },
+      "mongo": {
+        "iterations": 50,
+        "medianMs": 2.066,
+        "p95Ms": 3.725,
+        "minMs": 0.85,
+        "maxMs": 4.972
+      }
+    },
+    "itemUpdate": {
+      "normalized": {
+        "iterations": 50,
+        "medianMs": 0.609,
+        "p95Ms": 2.513,
+        "minMs": 0.32,
+        "maxMs": 2.748
+      },
+      "jsonb": {
+        "iterations": 50,
+        "medianMs": 0.394,
+        "p95Ms": 0.859,
+        "minMs": 0.235,
+        "maxMs": 2.76
+      },
+      "mongo": {
+        "iterations": 50,
+        "medianMs": 1.06,
+        "p95Ms": 2.811,
+        "minMs": 0.476,
+        "maxMs": 4.966
+      }
+    },
+    "skuCount": {
+      "normalized": {
+        "iterations": 100,
+        "medianMs": 0.103,
+        "p95Ms": 0.183,
+        "minMs": 0.079,
+        "maxMs": 0.217
+      },
+      "jsonb": {
+        "iterations": 100,
+        "medianMs": 0.267,
+        "p95Ms": 0.401,
+        "minMs": 0.234,
+        "maxMs": 0.486
+      },
+      "mongo": {
+        "iterations": 100,
+        "medianMs": 0.558,
+        "p95Ms": 1.331,
+        "minMs": 0.348,
+        "maxMs": 2.075
+      }
+    }
+  },
+  "plans": {
+    "aggregateRead": {
+      "normalized": {
+        "planningMs": 0.132,
+        "executionMs": 0.105,
+        "nodes": [
+          {
+            "nodeType": "Aggregate",
+            "relation": null,
+            "index": null,
+            "actualRows": 1,
+            "loops": 1,
+            "sharedHit": 13,
+            "sharedRead": 0,
+            "walRecords": 0,
+            "walBytes": 0
+          },
+          {
+            "nodeType": "Sort",
+            "relation": null,
+            "index": null,
+            "actualRows": 5,
+            "loops": 1,
+            "sharedHit": 13,
+            "sharedRead": 0,
+            "walRecords": 0,
+            "walBytes": 0
+          },
+          {
+            "nodeType": "Nested Loop",
+            "relation": null,
+            "index": null,
+            "actualRows": 5,
+            "loops": 1,
+            "sharedHit": 13,
+            "sharedRead": 0,
+            "walRecords": 0,
+            "walBytes": 0
+          },
+          {
+            "nodeType": "Index Scan",
+            "relation": "order_items_norm",
+            "index": "order_items_norm_pkey",
+            "actualRows": 5,
+            "loops": 1,
+            "sharedHit": 6,
+            "sharedRead": 0,
+            "walRecords": 0,
+            "walBytes": 0
+          },
+          {
+            "nodeType": "Materialize",
+            "relation": null,
+            "index": null,
+            "actualRows": 1,
+            "loops": 5,
+            "sharedHit": 7,
+            "sharedRead": 0,
+            "walRecords": 0,
+            "walBytes": 0
+          },
+          {
+            "nodeType": "Nested Loop",
+            "relation": null,
+            "index": null,
+            "actualRows": 1,
+            "loops": 1,
+            "sharedHit": 7,
+            "sharedRead": 0,
+            "walRecords": 0,
+            "walBytes": 0
+          },
+          {
+            "nodeType": "Index Scan",
+            "relation": "orders_norm",
+            "index": "orders_norm_pkey",
+            "actualRows": 1,
+            "loops": 1,
+            "sharedHit": 4,
+            "sharedRead": 0,
+            "walRecords": 0,
+            "walBytes": 0
+          },
+          {
+            "nodeType": "Index Scan",
+            "relation": "order_shipping_norm",
+            "index": "order_shipping_norm_pkey",
+            "actualRows": 1,
+            "loops": 1,
+            "sharedHit": 3,
+            "sharedRead": 0,
+            "walRecords": 0,
+            "walBytes": 0
+          }
+        ]
+      },
+      "jsonb": {
+        "planningMs": 0.039,
+        "executionMs": 0.021,
+        "nodes": [
+          {
+            "nodeType": "Index Scan",
+            "relation": "orders_jsonb",
+            "index": "orders_jsonb_pkey",
+            "actualRows": 1,
+            "loops": 1,
+            "sharedHit": 4,
+            "sharedRead": 0,
+            "walRecords": 0,
+            "walBytes": 0
+          }
+        ]
+      },
+      "mongo": {
+        "stages": [
+          "IDHACK"
+        ],
+        "indexNames": [],
+        "nReturned": 1,
+        "keysExamined": 1,
+        "docsExamined": 1,
+        "executionTimeMillis": 0
+      }
+    },
+    "skuCount": {
+      "normalized": {
+        "planningMs": 0.063,
+        "executionMs": 0.049,
+        "nodes": [
+          {
+            "nodeType": "Aggregate",
+            "relation": null,
+            "index": null,
+            "actualRows": 1,
+            "loops": 1,
+            "sharedHit": 5,
+            "sharedRead": 0,
+            "walRecords": 0,
+            "walBytes": 0
+          },
+          {
+            "nodeType": "Index Only Scan",
+            "relation": "order_items_norm",
+            "index": "norm_items_sku",
+            "actualRows": 75,
+            "loops": 1,
+            "sharedHit": 5,
+            "sharedRead": 0,
+            "walRecords": 0,
+            "walBytes": 0
+          }
+        ]
+      },
+      "jsonb": {
+        "planningMs": 0.082,
+        "executionMs": 0.229,
+        "nodes": [
+          {
+            "nodeType": "Aggregate",
+            "relation": null,
+            "index": null,
+            "actualRows": 1,
+            "loops": 1,
+            "sharedHit": 85,
+            "sharedRead": 0,
+            "walRecords": 0,
+            "walBytes": 0
+          },
+          {
+            "nodeType": "Bitmap Heap Scan",
+            "relation": "orders_jsonb",
+            "index": null,
+            "actualRows": 75,
+            "loops": 1,
+            "sharedHit": 85,
+            "sharedRead": 0,
+            "walRecords": 0,
+            "walBytes": 0
+          },
+          {
+            "nodeType": "Bitmap Index Scan",
+            "relation": null,
+            "index": "jsonb_items_gin",
+            "actualRows": 184,
+            "loops": 1,
+            "sharedHit": 9,
+            "sharedRead": 0,
+            "walRecords": 0,
+            "walBytes": 0
+          }
+        ]
+      },
+      "mongo": {
+        "stages": [
+          "FETCH",
+          "IXSCAN"
+        ],
+        "indexNames": [
+          "items_sku"
+        ],
+        "nReturned": 75,
+        "keysExamined": 75,
+        "docsExamined": 75,
+        "executionTimeMillis": 2
+      }
+    }
+  },
+  "sizes": {
+    "postgres": {
+      "jsonb": {
+        "dataBytes": 22388736,
+        "indexBytes": 9641984
+      },
+      "normalized": {
+        "dataBytes": 12304384,
+        "indexBytes": 13688832
+      }
+    },
+    "mongo": {
+      "dataBytes": 3592192,
+      "indexBytes": 5750784,
+      "avgObjectBytes": 467
+    }
+  },
+  "limitations": [
+    "Warm-cache exploratory benchmark on one Docker host; not a production capacity test.",
+    "PostgreSQL and MongoDB use different drivers, wire protocols, binary formats, compression, and execution-stat units.",
+    "Single-node PostgreSQL and a single-node MongoDB replica set; sharding, failover, and cross-shard work were not measured.",
+    "Client latency includes each product driver and local Docker network but excludes a real application and internet network.",
+    "Storage sizes reflect each engine default representation and compression and are not raw logical payload sizes."
+  ]
+}
