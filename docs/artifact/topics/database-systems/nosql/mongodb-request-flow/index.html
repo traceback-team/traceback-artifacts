@@ -26,7 +26,7 @@
 <body>
 <main class="page">
   <nav class="topbar" aria-label="문서 도구"><span class="brand">DATABASE SYSTEMS · NOSQL · 2/3</span><div class="actions"><a href="../../../../index.html">← 전체 목차</a><button id="print" type="button">PDF로 저장</button></div></nav>
-  <header class="hero"><p class="eyebrow">ZOOM 1 · REQUEST</p><h1>MongoDB 요청 처리</h1><p class="lead">첫 페이지의 네 노드는 그대로입니다. Driver는 조회 호출을 <b>BSON</b>(타입을 보존한 binary document)으로 만들고, <b>OP_MSG</b>(MongoDB wire message)에 담습니다. <code>mongod</code>가 이를 검증·계획·실행하는 지점까지만 확대합니다.</p><p class="bridge"><b>이전 지도에서 그대로:</b> Client → Driver → <code>mongod</code> → WiredTiger. <b>이번에 추가:</b> 각 화살표에서 Input이 어떤 Output으로 변하는지.</p>
+  <header class="hero"><p class="eyebrow">ZOOM 1 · REQUEST</p><h1>MongoDB 요청 처리</h1><p class="lead">1페이지에서 선택한 Document 모델이 실제 조회 요청이 되는 순간을 확대합니다. Driver가 호출을 <b>BSON</b>(타입을 보존한 binary document)과 <b>OP_MSG</b>(MongoDB wire message)로 만들고, <code>mongod</code>가 검증·계획·실행하는 지점까지만 봅니다.</p><p class="bridge"><b>1페이지에서 결정한 것:</b> 함께 읽을 주문 데이터를 한 Document로 표현한다. <b>2페이지의 질문:</b> 그 Document를 찾으라는 의도가 Client → Driver → <code>mongod</code>를 지나며 무엇으로 바뀌는가?</p>
     <div class="map" aria-label="MongoDB 요청 처리 전체 흐름"><div class="node client"><small>01 · APPLICATION</small><b>Client</b><p>조회 의도와 Driver API 호출</p></div><div class="node driver"><small>02 · LIBRARY</small><b>MongoDB Driver</b><p>Command를 BSON으로 만들고 OP_MSG에 담음</p></div><div class="node server"><small>03 · MONGOD</small><b>Command / Query 처리</b><p>권한 확인·Index 후보 선택·실행</p></div><div class="node engine"><small>04 · NEXT BOUNDARY</small><b>WiredTiger</b><p>선택된 Record·Index 작업을 수행</p></div></div><div class="handoff"><span>Driver API 호출</span><span>BSON command message</span><span>Record / Index operation</span><span>Page / file bytes</span></div>
   </header>
 
@@ -52,14 +52,15 @@
     <details class="compare-detail"><summary>SQL 기반 RDBMS와 요청 경로 비교</summary><div class="compare-grid"><div><b>공통점</b><p>요청 해석 → 규칙·권한 확인 → 실행 계획 선택 → 저장 계층 호출이라는 책임은 PostgreSQL·MySQL에도 있습니다.</p></div><div><b>MongoDB의 표현</b><p>SQL 문자열 대신 BSON Command를 받고 Collection·Document·Index 용어로 계획합니다. 저장 엔진 경계도 제품별로 다릅니다.</p></div></div></details>
   </section>
 
-  <nav class="next" aria-label="NoSQL 학습 경로"><a href="../mongodb-architecture/index.html">← 1. NoSQL 전체 구조</a><a href="../wiredtiger-storage/index.html">3. WiredTiger 저장 내부 →</a></nav>
+  <p class="bridge"><b>여기까지의 출력:</b> <code>mongod</code>가 선택한 Record·Index 작업입니다. 다음 페이지는 이 작업을 받은 WiredTiger가 RecordId, Page, Cache와 file bytes를 어떻게 연결하는지 확대합니다.</p>
+  <nav class="next" aria-label="NoSQL 학습 경로"><a href="../mongodb-architecture/index.html">← 1 / 3 · 선택 이유와 논리 모델</a><a href="../wiredtiger-storage/index.html">3 / 3 · WiredTiger 저장 내부 →</a></nav>
   <details class="sources"><summary>공식 근거</summary><ul><li><a href="https://www.mongodb.com/docs/v7.0/reference/mongodb-wire-protocol/">MongoDB Wire Protocol</a></li><li><a href="https://www.mongodb.com/docs/v7.0/core/query-plans/">MongoDB Query Plans</a></li><li><a href="https://www.mongodb.com/docs/drivers/node/current/monitoring-and-logging/monitoring/">Node.js Driver Command Monitoring</a></li></ul></details>
 </main>
 <script>
 (()=>{
   const steps={
     client:{owner:'애플리케이션 코드',title:'Client가 업무 의미와 Query 의도를 만든다',transform:'사용자 동작 → Driver API 호출',leftTitle:'알고 있는 것',left:'주문·고객·상품의 의미와 customerId 7의 PAID 주문을 찾겠다는 의도.',rightTitle:'모르는 것',right:'BSON byte layout, connection 선택, B-tree Page와 .wt 파일.',output:'OUTPUT · orders.find({ customerId: 7, status: "PAID" })',evidence:'조회 호출은 Command와 Filter를 넘깁니다. 237 B는 별도의 주문 Document 직렬화 실험값입니다.'},
-    driver:{owner:'MongoDB Node.js Driver 7.9.0',title:'Driver가 호출을 BSON message로 바꾼다',transform:'Driver API → BSON / OP_MSG',leftTitle:'직렬화와 연결',left:'Command와 Filter 값을 BSON Type과 bytes로 바꾸고 connection pool에서 연결할 mongod를 선택합니다.',rightTitle:'전송',right:'BSON Command를 OP_MSG body에 넣어 선택한 mongod connection으로 보냅니다.',output:'OUTPUT · BSON Command를 담은 Wire message',evidence:'Driver에서 create, createIndexes, insert, update, commitTransaction, find Command 시작을 관찰했습니다.'},
+    driver:{owner:'MongoDB Node.js Driver 7.9.0',title:'Driver가 호출을 BSON message로 바꾼다',transform:'Driver API → BSON / OP_MSG',leftTitle:'직렬화와 대상 선택',left:'Command와 Filter를 BSON bytes로 바꾸고, Topology 정보로 요청을 보낼 mongod를 선택합니다.',rightTitle:'연결과 전송',right:'선택한 Server의 connection pool에서 연결을 가져와 OP_MSG body에 BSON Command를 담아 보냅니다.',output:'OUTPUT · BSON Command를 담은 Wire message',evidence:'Driver에서 create, createIndexes, insert, update, commitTransaction, find Command 시작을 관찰했습니다.'},
     server:{owner:'mongod · Command / Query 계층',title:'mongod가 Command를 실행 가능한 작업으로 바꾼다',transform:'BSON Command → Record / Index operation',leftTitle:'해석과 검증',left:'Database·Collection 이름과 Command를 식별하고 권한·Session을 확인합니다. 쓰기 요청에는 설정된 경우 Document validator도 적용합니다.',rightTitle:'계획과 실행',right:'Collection 전체 읽기와 Index 후보를 비교해 Plan을 고르고, 실행 중 WiredTiger를 호출합니다.',output:'OUTPUT · Collection/Index Record 읽기·쓰기 요청',evidence:'실험 Query는 customer_status Index를 사용해 key 1개와 document 1개를 검사했습니다.'}
   };
   const buttons=[...document.querySelectorAll('[data-step]')],detail=document.getElementById('detail');
