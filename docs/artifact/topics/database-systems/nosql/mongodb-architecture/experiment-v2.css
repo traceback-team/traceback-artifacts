@@ -16,6 +16,8 @@
 #experiment .finding.unknown{border-top:4px solid var(--server)}
 #experiment .finding h3{font-size:.74rem}
 #experiment .finding p{margin-top:5px;color:var(--muted);font-size:.58rem}
+#experiment .comparison-rationale{margin-top:9px;border:1px solid #3b5a64;border-radius:8px;background:#091920;padding:9px 10px;color:var(--muted);font-size:.55rem}
+#experiment .comparison-rationale b{color:var(--text)}
 #experiment .query-details{margin-top:10px}
 #experiment .evidence-pair .query-paths{order:1}
 #experiment .evidence-pair .query-details{order:2}
