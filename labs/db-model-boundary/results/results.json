@@ -1,5 +1,5 @@
 {
-  "observedAt": "2026-11-21T07:12:31.702Z",
+  "observedAt": "2026-11-21T07:19:52.231Z",
   "versions": {
     "postgres": "18.6 (Debian 18.6-1.pgdg13+2)",
     "mongo": "7.0.41",
@@ -13,7 +13,7 @@
     "readIterations": 100,
     "writeIterations": 50,
     "seed": 20261120,
-    "loadSeconds": 4.28,
+    "loadSeconds": 4.11,
     "cache": "warm",
     "topology": "single-node containers"
   },
@@ -27,244 +27,470 @@
     "aggregateRead": {
       "normalized": {
         "iterations": 100,
-        "medianMs": 0.317,
-        "p95Ms": 0.469,
-        "minMs": 0.186,
-        "maxMs": 0.616
+        "medianMs": 0.616,
+        "p95Ms": 2.365,
+        "minMs": 0.286,
+        "maxMs": 2.816
       },
       "jsonb": {
         "iterations": 100,
-        "medianMs": 0.169,
-        "p95Ms": 0.398,
-        "minMs": 0.112,
-        "maxMs": 0.681
+        "medianMs": 0.567,
+        "p95Ms": 1.015,
+        "minMs": 0.189,
+        "maxMs": 1.357
       },
       "mongo": {
         "iterations": 100,
-        "medianMs": 0.497,
-        "p95Ms": 0.791,
-        "minMs": 0.328,
-        "maxMs": 1.667
+        "medianMs": 0.568,
+        "p95Ms": 4.772,
+        "minMs": 0.338,
+        "maxMs": 6.945
       }
     },
     "customerStatusRead": {
       "normalized": {
         "iterations": 100,
-        "medianMs": 0.215,
-        "p95Ms": 0.379,
-        "minMs": 0.151,
-        "maxMs": 0.573
+        "medianMs": 0.676,
+        "p95Ms": 1.573,
+        "minMs": 0.236,
+        "maxMs": 1.69
       },
       "jsonb": {
         "iterations": 100,
-        "medianMs": 0.206,
-        "p95Ms": 0.424,
-        "minMs": 0.128,
-        "maxMs": 0.636
+        "medianMs": 0.241,
+        "p95Ms": 0.942,
+        "minMs": 0.157,
+        "maxMs": 1.298
       },
       "mongo": {
         "iterations": 100,
-        "medianMs": 0.613,
-        "p95Ms": 1.074,
-        "minMs": 0.344,
-        "maxMs": 1.693
+        "medianMs": 0.569,
+        "p95Ms": 0.877,
+        "minMs": 0.389,
+        "maxMs": 0.945
       }
     },
     "statusUpdate": {
       "normalized": {
         "iterations": 50,
-        "medianMs": 0.66,
-        "p95Ms": 2.83,
-        "minMs": 0.383,
-        "maxMs": 3.448
+        "medianMs": 0.643,
+        "p95Ms": 1.056,
+        "minMs": 0.384,
+        "maxMs": 1.151
       },
       "jsonb": {
         "iterations": 50,
-        "medianMs": 0.657,
-        "p95Ms": 2.541,
-        "minMs": 0.369,
-        "maxMs": 5.109
+        "medianMs": 0.619,
+        "p95Ms": 1.246,
+        "minMs": 0.408,
+        "maxMs": 2.345
       },
       "mongo": {
         "iterations": 50,
-        "medianMs": 2.415,
-        "p95Ms": 5.407,
-        "minMs": 1.129,
-        "maxMs": 6.326
+        "medianMs": 1.811,
+        "p95Ms": 2.997,
+        "minMs": 0.878,
+        "maxMs": 4.148
       }
     },
     "itemUpdate": {
       "normalized": {
         "iterations": 50,
-        "medianMs": 0.715,
-        "p95Ms": 2.645,
-        "minMs": 0.371,
-        "maxMs": 3.159
+        "medianMs": 0.594,
+        "p95Ms": 1.551,
+        "minMs": 0.387,
+        "maxMs": 7.419
       },
       "jsonb": {
         "iterations": 50,
-        "medianMs": 1.045,
-        "p95Ms": 3.146,
-        "minMs": 0.379,
-        "maxMs": 3.799
+        "medianMs": 0.559,
+        "p95Ms": 1.004,
+        "minMs": 0.305,
+        "maxMs": 1.266
       },
       "mongo": {
         "iterations": 50,
-        "medianMs": 2.447,
-        "p95Ms": 5.103,
-        "minMs": 1.114,
-        "maxMs": 6.566
+        "medianMs": 1.834,
+        "p95Ms": 2.94,
+        "minMs": 0.855,
+        "maxMs": 3.335
       }
     },
     "skuCount": {
       "normalized": {
         "iterations": 100,
-        "medianMs": 0.246,
-        "p95Ms": 0.425,
-        "minMs": 0.145,
-        "maxMs": 0.658
+        "medianMs": 0.251,
+        "p95Ms": 2.119,
+        "minMs": 0.143,
+        "maxMs": 12.391
       },
       "jsonb": {
         "iterations": 100,
-        "medianMs": 0.29,
-        "p95Ms": 0.517,
-        "minMs": 0.181,
-        "maxMs": 0.654
+        "medianMs": 0.336,
+        "p95Ms": 0.497,
+        "minMs": 0.261,
+        "maxMs": 0.555
       },
       "mongo": {
         "iterations": 100,
-        "medianMs": 0.4,
-        "p95Ms": 0.638,
-        "minMs": 0.238,
-        "maxMs": 0.759
+        "medianMs": 0.47,
+        "p95Ms": 0.688,
+        "minMs": 0.243,
+        "maxMs": 0.918
       }
     }
   },
   "diagnostics": {
-    "mongoAggregateReadBoundary": {
-      "iterations": 5000,
-      "serverOperations": 5001,
-      "clientAverageMs": 0.282986,
-      "serverAverageMs": 0.050056,
-      "outsideServerAverageMs": 0.23293,
-      "outsideServerSharePercent": 82.3,
-      "method": "Client wall time compared with MongoDB serverStatus.opLatencies.reads delta"
-    },
-    "skuReadBoundary": {
-      "iterationsPerRun": 1000,
-      "runs": 5,
-      "samples": [
-        {
-          "run": 1,
-          "postgres": {
-            "calls": 1000,
-            "clientAverageMs": 0.393747,
-            "serverPlanAverageMs": 0.073355,
-            "serverExecuteAverageMs": 0.111734,
-            "sharedBufferHitsPerCall": 86,
-            "sharedBufferReadsPerCall": 0
+    "comparisonReadBoundaries": {
+      "aggregateRead": {
+        "iterationsPerRun": 1000,
+        "runs": 5,
+        "samples": [
+          {
+            "run": 1,
+            "normalized": {
+              "calls": 1000,
+              "clientAverageMs": 0.222607,
+              "serverAverageMs": 0.063459,
+              "outsideServerAverageMs": 0.159148,
+              "sharedBufferHitsPerCall": 12,
+              "sharedBufferReadsPerCall": 0
+            },
+            "jsonb": {
+              "calls": 1000,
+              "clientAverageMs": 0.145136,
+              "serverAverageMs": 0.016361,
+              "outsideServerAverageMs": 0.128775,
+              "sharedBufferHitsPerCall": 3,
+              "sharedBufferReadsPerCall": 0
+            },
+            "mongo": {
+              "operations": 1001,
+              "clientAverageMs": 0.327165,
+              "serverAverageMs": 0.048025,
+              "outsideServerAverageMs": 0.27914,
+              "cachePagesRead": 0,
+              "cacheBytesRead": 0
+            }
+          },
+          {
+            "run": 2,
+            "normalized": {
+              "calls": 1000,
+              "clientAverageMs": 0.257318,
+              "serverAverageMs": 0.067835,
+              "outsideServerAverageMs": 0.189484,
+              "sharedBufferHitsPerCall": 12,
+              "sharedBufferReadsPerCall": 0
+            },
+            "jsonb": {
+              "calls": 1000,
+              "clientAverageMs": 0.145156,
+              "serverAverageMs": 0.018653,
+              "outsideServerAverageMs": 0.126503,
+              "sharedBufferHitsPerCall": 3,
+              "sharedBufferReadsPerCall": 0
+            },
+            "mongo": {
+              "operations": 1000,
+              "clientAverageMs": 0.39738,
+              "serverAverageMs": 0.064302,
+              "outsideServerAverageMs": 0.333078,
+              "cachePagesRead": 0,
+              "cacheBytesRead": 0
+            }
+          },
+          {
+            "run": 3,
+            "normalized": {
+              "calls": 1000,
+              "clientAverageMs": 0.292401,
+              "serverAverageMs": 0.0792,
+              "outsideServerAverageMs": 0.213201,
+              "sharedBufferHitsPerCall": 12,
+              "sharedBufferReadsPerCall": 0
+            },
+            "jsonb": {
+              "calls": 1000,
+              "clientAverageMs": 0.155201,
+              "serverAverageMs": 0.019859,
+              "outsideServerAverageMs": 0.135343,
+              "sharedBufferHitsPerCall": 3,
+              "sharedBufferReadsPerCall": 0
+            },
+            "mongo": {
+              "operations": 1000,
+              "clientAverageMs": 0.303727,
+              "serverAverageMs": 0.04667,
+              "outsideServerAverageMs": 0.257057,
+              "cachePagesRead": 0,
+              "cacheBytesRead": 0
+            }
+          },
+          {
+            "run": 4,
+            "normalized": {
+              "calls": 1000,
+              "clientAverageMs": 0.342213,
+              "serverAverageMs": 0.088642,
+              "outsideServerAverageMs": 0.253571,
+              "sharedBufferHitsPerCall": 12,
+              "sharedBufferReadsPerCall": 0
+            },
+            "jsonb": {
+              "calls": 1000,
+              "clientAverageMs": 0.177383,
+              "serverAverageMs": 0.023711,
+              "outsideServerAverageMs": 0.153672,
+              "sharedBufferHitsPerCall": 3,
+              "sharedBufferReadsPerCall": 0
+            },
+            "mongo": {
+              "operations": 1001,
+              "clientAverageMs": 0.257547,
+              "serverAverageMs": 0.039153,
+              "outsideServerAverageMs": 0.218394,
+              "cachePagesRead": 0,
+              "cacheBytesRead": 0
+            }
+          },
+          {
+            "run": 5,
+            "normalized": {
+              "calls": 1000,
+              "clientAverageMs": 0.213489,
+              "serverAverageMs": 0.061225,
+              "outsideServerAverageMs": 0.152264,
+              "sharedBufferHitsPerCall": 12,
+              "sharedBufferReadsPerCall": 0
+            },
+            "jsonb": {
+              "calls": 1000,
+              "clientAverageMs": 0.130984,
+              "serverAverageMs": 0.017612,
+              "outsideServerAverageMs": 0.113372,
+              "sharedBufferHitsPerCall": 3,
+              "sharedBufferReadsPerCall": 0
+            },
+            "mongo": {
+              "operations": 1000,
+              "clientAverageMs": 0.253649,
+              "serverAverageMs": 0.039802,
+              "outsideServerAverageMs": 0.213847,
+              "cachePagesRead": 0,
+              "cacheBytesRead": 0
+            }
+          }
+        ],
+        "median": {
+          "normalized": {
+            "clientAverageMs": 0.257318,
+            "serverAverageMs": 0.067835,
+            "outsideServerAverageMs": 0.189484,
+            "clientRangeMs": [
+              0.213489,
+              0.342213
+            ]
+          },
+          "jsonb": {
+            "clientAverageMs": 0.145156,
+            "serverAverageMs": 0.018653,
+            "outsideServerAverageMs": 0.128775,
+            "clientRangeMs": [
+              0.130984,
+              0.177383
+            ]
           },
           "mongo": {
-            "serverOperations": 1000,
-            "clientAverageMs": 0.402454,
-            "serverAverageMs": 0.1265,
-            "cachePagesRead": 0,
-            "cacheBytesRead": 0
+            "clientAverageMs": 0.303727,
+            "serverAverageMs": 0.04667,
+            "outsideServerAverageMs": 0.257057,
+            "clientRangeMs": [
+              0.253649,
+              0.39738
+            ]
           }
         },
-        {
-          "run": 2,
-          "postgres": {
-            "calls": 1000,
-            "clientAverageMs": 0.319167,
-            "serverPlanAverageMs": 0.064069,
-            "serverExecuteAverageMs": 0.090608,
-            "sharedBufferHitsPerCall": 86,
-            "sharedBufferReadsPerCall": 0
-          },
-          "mongo": {
-            "serverOperations": 1000,
-            "clientAverageMs": 0.394546,
-            "serverAverageMs": 0.123866,
-            "cachePagesRead": 0,
-            "cacheBytesRead": 0
-          }
-        },
-        {
-          "run": 3,
-          "postgres": {
-            "calls": 1000,
-            "clientAverageMs": 0.253931,
-            "serverPlanAverageMs": 0.056631,
-            "serverExecuteAverageMs": 0.076361,
-            "sharedBufferHitsPerCall": 86,
-            "sharedBufferReadsPerCall": 0
-          },
-          "mongo": {
-            "serverOperations": 1000,
-            "clientAverageMs": 0.268514,
-            "serverAverageMs": 0.086765,
-            "cachePagesRead": 0,
-            "cacheBytesRead": 0
-          }
-        },
-        {
-          "run": 4,
-          "postgres": {
-            "calls": 1000,
-            "clientAverageMs": 0.241385,
-            "serverPlanAverageMs": 0.056514,
-            "serverExecuteAverageMs": 0.076043,
-            "sharedBufferHitsPerCall": 86,
-            "sharedBufferReadsPerCall": 0
-          },
-          "mongo": {
-            "serverOperations": 1000,
-            "clientAverageMs": 0.270065,
-            "serverAverageMs": 0.086338,
-            "cachePagesRead": 0,
-            "cacheBytesRead": 0
-          }
-        },
-        {
-          "run": 5,
-          "postgres": {
-            "calls": 1000,
-            "clientAverageMs": 0.246626,
-            "serverPlanAverageMs": 0.055933,
-            "serverExecuteAverageMs": 0.075093,
-            "sharedBufferHitsPerCall": 86,
-            "sharedBufferReadsPerCall": 0
-          },
-          "mongo": {
-            "serverOperations": 1000,
-            "clientAverageMs": 0.27931,
-            "serverAverageMs": 0.08827,
-            "cachePagesRead": 0,
-            "cacheBytesRead": 0
-          }
-        }
-      ],
-      "median": {
-        "postgres": {
-          "clientAverageMs": 0.253931,
-          "serverAverageMs": 0.132992,
-          "outsideServerAverageMs": 0.120939
-        },
-        "mongo": {
-          "clientAverageMs": 0.27931,
-          "serverAverageMs": 0.08827,
-          "outsideServerAverageMs": 0.19104
-        }
+        "method": "Five runs of 1,000 sequential calls per model after 100 warm-ups; PostgreSQL pg_stat_statements and MongoDB serverStatus.opLatencies.reads compared with client wall time"
       },
-      "method": "Five sequential runs; PostgreSQL pg_stat_statements compared with client wall time, MongoDB serverStatus.opLatencies.reads compared with client wall time"
+      "skuCount": {
+        "iterationsPerRun": 1000,
+        "runs": 5,
+        "samples": [
+          {
+            "run": 1,
+            "normalized": {
+              "calls": 1000,
+              "clientAverageMs": 0.131324,
+              "serverAverageMs": 0.024583,
+              "outsideServerAverageMs": 0.106741,
+              "sharedBufferHitsPerCall": 5,
+              "sharedBufferReadsPerCall": 0
+            },
+            "jsonb": {
+              "calls": 1000,
+              "clientAverageMs": 0.244701,
+              "serverAverageMs": 0.130954,
+              "outsideServerAverageMs": 0.113747,
+              "sharedBufferHitsPerCall": 86,
+              "sharedBufferReadsPerCall": 0
+            },
+            "mongo": {
+              "operations": 1000,
+              "clientAverageMs": 0.273963,
+              "serverAverageMs": 0.083896,
+              "outsideServerAverageMs": 0.190067,
+              "cachePagesRead": 0,
+              "cacheBytesRead": 0
+            }
+          },
+          {
+            "run": 2,
+            "normalized": {
+              "calls": 1000,
+              "clientAverageMs": 0.109023,
+              "serverAverageMs": 0.022863,
+              "outsideServerAverageMs": 0.08616,
+              "sharedBufferHitsPerCall": 5,
+              "sharedBufferReadsPerCall": 0
+            },
+            "jsonb": {
+              "calls": 1000,
+              "clientAverageMs": 0.225992,
+              "serverAverageMs": 0.127324,
+              "outsideServerAverageMs": 0.098669,
+              "sharedBufferHitsPerCall": 86,
+              "sharedBufferReadsPerCall": 0
+            },
+            "mongo": {
+              "operations": 1001,
+              "clientAverageMs": 0.373239,
+              "serverAverageMs": 0.101417,
+              "outsideServerAverageMs": 0.271823,
+              "cachePagesRead": 0,
+              "cacheBytesRead": 0
+            }
+          },
+          {
+            "run": 3,
+            "normalized": {
+              "calls": 1000,
+              "clientAverageMs": 0.135333,
+              "serverAverageMs": 0.025254,
+              "outsideServerAverageMs": 0.110079,
+              "sharedBufferHitsPerCall": 5,
+              "sharedBufferReadsPerCall": 0
+            },
+            "jsonb": {
+              "calls": 1000,
+              "clientAverageMs": 0.243487,
+              "serverAverageMs": 0.131024,
+              "outsideServerAverageMs": 0.112463,
+              "sharedBufferHitsPerCall": 86,
+              "sharedBufferReadsPerCall": 0
+            },
+            "mongo": {
+              "operations": 1000,
+              "clientAverageMs": 0.267013,
+              "serverAverageMs": 0.081336,
+              "outsideServerAverageMs": 0.185677,
+              "cachePagesRead": 0,
+              "cacheBytesRead": 0
+            }
+          },
+          {
+            "run": 4,
+            "normalized": {
+              "calls": 1000,
+              "clientAverageMs": 0.13425,
+              "serverAverageMs": 0.025062,
+              "outsideServerAverageMs": 0.109188,
+              "sharedBufferHitsPerCall": 5,
+              "sharedBufferReadsPerCall": 0
+            },
+            "jsonb": {
+              "calls": 1000,
+              "clientAverageMs": 0.251307,
+              "serverAverageMs": 0.13566,
+              "outsideServerAverageMs": 0.115647,
+              "sharedBufferHitsPerCall": 86,
+              "sharedBufferReadsPerCall": 0
+            },
+            "mongo": {
+              "operations": 1000,
+              "clientAverageMs": 0.350106,
+              "serverAverageMs": 0.106289,
+              "outsideServerAverageMs": 0.243817,
+              "cachePagesRead": 0,
+              "cacheBytesRead": 0
+            }
+          },
+          {
+            "run": 5,
+            "normalized": {
+              "calls": 1000,
+              "clientAverageMs": 0.126915,
+              "serverAverageMs": 0.025633,
+              "outsideServerAverageMs": 0.101281,
+              "sharedBufferHitsPerCall": 5,
+              "sharedBufferReadsPerCall": 0
+            },
+            "jsonb": {
+              "calls": 1000,
+              "clientAverageMs": 0.341231,
+              "serverAverageMs": 0.166171,
+              "outsideServerAverageMs": 0.17506,
+              "sharedBufferHitsPerCall": 86,
+              "sharedBufferReadsPerCall": 0
+            },
+            "mongo": {
+              "operations": 1001,
+              "clientAverageMs": 0.47851,
+              "serverAverageMs": 0.134641,
+              "outsideServerAverageMs": 0.343868,
+              "cachePagesRead": 0,
+              "cacheBytesRead": 0
+            }
+          }
+        ],
+        "median": {
+          "normalized": {
+            "clientAverageMs": 0.131324,
+            "serverAverageMs": 0.025062,
+            "outsideServerAverageMs": 0.106741,
+            "clientRangeMs": [
+              0.109023,
+              0.135333
+            ]
+          },
+          "jsonb": {
+            "clientAverageMs": 0.244701,
+            "serverAverageMs": 0.131024,
+            "outsideServerAverageMs": 0.113747,
+            "clientRangeMs": [
+              0.225992,
+              0.341231
+            ]
+          },
+          "mongo": {
+            "clientAverageMs": 0.350106,
+            "serverAverageMs": 0.101417,
+            "outsideServerAverageMs": 0.243817,
+            "clientRangeMs": [
+              0.267013,
+              0.47851
+            ]
+          }
+        },
+        "method": "Five runs of 1,000 sequential calls per model after 100 warm-ups; PostgreSQL pg_stat_statements and MongoDB serverStatus.opLatencies.reads compared with client wall time"
+      }
     }
   },
   "plans": {
     "aggregateRead": {
       "normalized": {
-        "planningMs": 0.113,
-        "executionMs": 0.115,
+        "planningMs": 0.139,
+        "executionMs": 0.155,
         "nodes": [
           {
             "nodeType": "Aggregate",
@@ -272,7 +498,7 @@
             "index": null,
             "actualRows": 1,
             "loops": 1,
-            "sharedHit": 13,
+            "sharedHit": 12,
             "sharedRead": 0,
             "walRecords": 0,
             "walBytes": 0
@@ -283,7 +509,7 @@
             "index": null,
             "actualRows": 5,
             "loops": 1,
-            "sharedHit": 13,
+            "sharedHit": 12,
             "sharedRead": 0,
             "walRecords": 0,
             "walBytes": 0
@@ -294,7 +520,7 @@
             "index": null,
             "actualRows": 5,
             "loops": 1,
-            "sharedHit": 13,
+            "sharedHit": 12,
             "sharedRead": 0,
             "walRecords": 0,
             "walBytes": 0
@@ -316,7 +542,7 @@
             "index": null,
             "actualRows": 1,
             "loops": 5,
-            "sharedHit": 7,
+            "sharedHit": 6,
             "sharedRead": 0,
             "walRecords": 0,
             "walBytes": 0
@@ -327,7 +553,7 @@
             "index": null,
             "actualRows": 1,
             "loops": 1,
-            "sharedHit": 7,
+            "sharedHit": 6,
             "sharedRead": 0,
             "walRecords": 0,
             "walBytes": 0
@@ -338,7 +564,7 @@
             "index": "orders_norm_pkey",
             "actualRows": 1,
             "loops": 1,
-            "sharedHit": 4,
+            "sharedHit": 3,
             "sharedRead": 0,
             "walRecords": 0,
             "walBytes": 0
@@ -357,7 +583,7 @@
         ]
       },
       "jsonb": {
-        "planningMs": 0.038,
+        "planningMs": 0.042,
         "executionMs": 0.023,
         "nodes": [
           {
@@ -366,7 +592,7 @@
             "index": "orders_jsonb_pkey",
             "actualRows": 1,
             "loops": 1,
-            "sharedHit": 4,
+            "sharedHit": 3,
             "sharedRead": 0,
             "walRecords": 0,
             "walBytes": 0
@@ -386,8 +612,8 @@
     },
     "skuCount": {
       "normalized": {
-        "planningMs": 0.024,
-        "executionMs": 0.057,
+        "planningMs": 0.027,
+        "executionMs": 0.032,
         "nodes": [
           {
             "nodeType": "Aggregate",
@@ -414,8 +640,8 @@
         ]
       },
       "jsonb": {
-        "planningMs": 0.073,
-        "executionMs": 0.173,
+        "planningMs": 0.083,
+        "executionMs": 0.228,
         "nodes": [
           {
             "nodeType": "Aggregate",
@@ -479,7 +705,7 @@
     },
     "mongo": {
       "dataBytes": 3592192,
-      "indexBytes": 6316032,
+      "indexBytes": 5586944,
       "avgObjectBytes": 467
     }
   },

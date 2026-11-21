@@ -66,94 +66,80 @@ async function measure(fn, iterations, warmups = 10) {
   };
 }
 
-async function measureMongoReadBoundary(mongo, readFn, iterations = 5000) {
-  const admin = mongo.db('admin');
-  for (let i = 0; i < 200; i += 1) await readFn();
-  const before = (await admin.command({ serverStatus: 1 })).opLatencies.reads;
+async function measurePostgresBoundary(pg, readFn, queryPattern, iterations) {
+  for (let i = 0; i < 100; i += 1) await readFn();
+  await pg.query('SELECT pg_stat_statements_reset()');
   const started = performance.now();
   for (let i = 0; i < iterations; i += 1) await readFn();
-  const clientElapsedMs = performance.now() - started;
-  const after = (await admin.command({ serverStatus: 1 })).opLatencies.reads;
-  const serverOperations = Number(after.ops) - Number(before.ops);
-  const serverLatencyMicros = Number(after.latency) - Number(before.latency);
-  const clientAverageMs = clientElapsedMs / iterations;
-  const serverAverageMs = serverLatencyMicros / serverOperations / 1000;
+  const clientAverageMs = (performance.now() - started) / iterations;
+  const stats = (await pg.query(`
+    SELECT calls, total_plan_time, total_exec_time, shared_blks_hit, shared_blks_read
+    FROM pg_stat_statements
+    WHERE query LIKE $1
+    ORDER BY calls DESC LIMIT 1`, [queryPattern])).rows[0];
+  const calls = Number(stats.calls);
+  const serverAverageMs = (Number(stats.total_plan_time) + Number(stats.total_exec_time)) / calls;
   return {
-    iterations,
-    serverOperations,
+    calls,
     clientAverageMs: Number(clientAverageMs.toFixed(6)),
     serverAverageMs: Number(serverAverageMs.toFixed(6)),
     outsideServerAverageMs: Number((clientAverageMs - serverAverageMs).toFixed(6)),
-    outsideServerSharePercent: Number((((clientAverageMs - serverAverageMs) / clientAverageMs) * 100).toFixed(1)),
-    method: 'Client wall time compared with MongoDB serverStatus.opLatencies.reads delta'
+    sharedBufferHitsPerCall: Number((Number(stats.shared_blks_hit) / calls).toFixed(3)),
+    sharedBufferReadsPerCall: Number((Number(stats.shared_blks_read) / calls).toFixed(3))
   };
 }
 
-async function measureSkuBoundaries(pg, mongo, pgReadFn, mongoReadFn, iterations = 1000, runs = 5) {
+async function measureMongoBoundary(mongo, readFn, iterations) {
   const admin = mongo.db('admin');
+  for (let i = 0; i < 100; i += 1) await readFn();
+  const beforeStatus = await admin.command({ serverStatus: 1 });
+  const started = performance.now();
+  for (let i = 0; i < iterations; i += 1) await readFn();
+  const clientAverageMs = (performance.now() - started) / iterations;
+  const afterStatus = await admin.command({ serverStatus: 1 });
+  const operations = Number(afterStatus.opLatencies.reads.ops) - Number(beforeStatus.opLatencies.reads.ops);
+  const serverAverageMs = (Number(afterStatus.opLatencies.reads.latency) - Number(beforeStatus.opLatencies.reads.latency)) / operations / 1000;
+  return {
+    operations,
+    clientAverageMs: Number(clientAverageMs.toFixed(6)),
+    serverAverageMs: Number(serverAverageMs.toFixed(6)),
+    outsideServerAverageMs: Number((clientAverageMs - serverAverageMs).toFixed(6)),
+    cachePagesRead: Number(afterStatus.wiredTiger.cache['pages read into cache']) - Number(beforeStatus.wiredTiger.cache['pages read into cache']),
+    cacheBytesRead: Number(afterStatus.wiredTiger.cache['bytes read into cache']) - Number(beforeStatus.wiredTiger.cache['bytes read into cache'])
+  };
+}
+
+function summarizeBoundaryRuns(samples) {
+  return Object.fromEntries(['normalized', 'jsonb', 'mongo'].map(model => {
+    const values = samples.map(sample => sample[model]);
+    return [model, {
+      clientAverageMs: Number(median(values.map(value => value.clientAverageMs)).toFixed(6)),
+      serverAverageMs: Number(median(values.map(value => value.serverAverageMs)).toFixed(6)),
+      outsideServerAverageMs: Number(median(values.map(value => value.outsideServerAverageMs)).toFixed(6)),
+      clientRangeMs: [
+        Number(Math.min(...values.map(value => value.clientAverageMs)).toFixed(6)),
+        Number(Math.max(...values.map(value => value.clientAverageMs)).toFixed(6))
+      ]
+    }];
+  }));
+}
+
+async function measureThreeModelBoundaries(pg, mongo, reads, patterns, iterations = 1000, runs = 5) {
   const samples = [];
   for (let run = 1; run <= runs; run += 1) {
-    await pg.query('SELECT pg_stat_statements_reset()');
-    const pgStarted = performance.now();
-    for (let i = 0; i < iterations; i += 1) await pgReadFn();
-    const pgClientAverageMs = (performance.now() - pgStarted) / iterations;
-    const pgStats = (await pg.query(`
-      SELECT calls, total_plan_time, total_exec_time, shared_blks_hit, shared_blks_read
-      FROM pg_stat_statements
-      WHERE query LIKE 'SELECT count(*)::int AS count FROM orders_jsonb%'
-      ORDER BY calls DESC LIMIT 1`)).rows[0];
-
-    const mongoBeforeStatus = await admin.command({ serverStatus: 1 });
-    const mongoBeforeReads = mongoBeforeStatus.opLatencies.reads;
-    const mongoBeforeCache = mongoBeforeStatus.wiredTiger.cache;
-    const mongoStarted = performance.now();
-    for (let i = 0; i < iterations; i += 1) await mongoReadFn();
-    const mongoClientAverageMs = (performance.now() - mongoStarted) / iterations;
-    const mongoAfterStatus = await admin.command({ serverStatus: 1 });
-    const mongoAfterReads = mongoAfterStatus.opLatencies.reads;
-    const mongoAfterCache = mongoAfterStatus.wiredTiger.cache;
-    const mongoServerOperations = Number(mongoAfterReads.ops) - Number(mongoBeforeReads.ops);
-    const mongoServerAverageMs = (Number(mongoAfterReads.latency) - Number(mongoBeforeReads.latency)) / mongoServerOperations / 1000;
     samples.push({
       run,
-      postgres: {
-        calls: Number(pgStats.calls),
-        clientAverageMs: Number(pgClientAverageMs.toFixed(6)),
-        serverPlanAverageMs: Number((Number(pgStats.total_plan_time) / Number(pgStats.calls)).toFixed(6)),
-        serverExecuteAverageMs: Number((Number(pgStats.total_exec_time) / Number(pgStats.calls)).toFixed(6)),
-        sharedBufferHitsPerCall: Number((Number(pgStats.shared_blks_hit) / Number(pgStats.calls)).toFixed(3)),
-        sharedBufferReadsPerCall: Number((Number(pgStats.shared_blks_read) / Number(pgStats.calls)).toFixed(3))
-      },
-      mongo: {
-        serverOperations: mongoServerOperations,
-        clientAverageMs: Number(mongoClientAverageMs.toFixed(6)),
-        serverAverageMs: Number(mongoServerAverageMs.toFixed(6)),
-        cachePagesRead: Number(mongoAfterCache['pages read into cache']) - Number(mongoBeforeCache['pages read into cache']),
-        cacheBytesRead: Number(mongoAfterCache['bytes read into cache']) - Number(mongoBeforeCache['bytes read into cache'])
-      }
+      normalized: await measurePostgresBoundary(pg, reads.normalized, patterns.normalized, iterations),
+      jsonb: await measurePostgresBoundary(pg, reads.jsonb, patterns.jsonb, iterations),
+      mongo: await measureMongoBoundary(mongo, reads.mongo, iterations)
     });
   }
-  const pgClient = samples.map(sample => sample.postgres.clientAverageMs);
-  const pgServer = samples.map(sample => sample.postgres.serverPlanAverageMs + sample.postgres.serverExecuteAverageMs);
-  const mongoClient = samples.map(sample => sample.mongo.clientAverageMs);
-  const mongoServer = samples.map(sample => sample.mongo.serverAverageMs);
   return {
     iterationsPerRun: iterations,
     runs,
     samples,
-    median: {
-      postgres: {
-        clientAverageMs: Number(median(pgClient).toFixed(6)),
-        serverAverageMs: Number(median(pgServer).toFixed(6)),
-        outsideServerAverageMs: Number((median(pgClient) - median(pgServer)).toFixed(6))
-      },
-      mongo: {
-        clientAverageMs: Number(median(mongoClient).toFixed(6)),
-        serverAverageMs: Number(median(mongoServer).toFixed(6)),
-        outsideServerAverageMs: Number((median(mongoClient) - median(mongoServer)).toFixed(6))
-      }
-    },
-    method: 'Five sequential runs; PostgreSQL pg_stat_statements compared with client wall time, MongoDB serverStatus.opLatencies.reads compared with client wall time'
+    median: summarizeBoundaryRuns(samples),
+    method: 'Five runs of 1,000 sequential calls per model after 100 warm-ups; PostgreSQL pg_stat_statements and MongoDB serverStatus.opLatencies.reads compared with client wall time'
   };
 }
 
@@ -399,8 +385,24 @@ async function main() {
       }
     };
     const diagnostics = {
-      mongoAggregateReadBoundary: await measureMongoReadBoundary(mongo, mongoRead),
-      skuReadBoundary: await measureSkuBoundaries(pg, mongo, jsonbSku, mongoSku)
+      comparisonReadBoundaries: {
+        aggregateRead: await measureThreeModelBoundaries(pg, mongo, {
+          normalized: normalizedRead,
+          jsonb: jsonbRead,
+          mongo: mongoRead
+        }, {
+          normalized: '%FROM orders_norm o%JOIN order_shipping_norm%',
+          jsonb: 'SELECT doc FROM orders_jsonb WHERE id%',
+        }),
+        skuCount: await measureThreeModelBoundaries(pg, mongo, {
+          normalized: normalizedSku,
+          jsonb: jsonbSku,
+          mongo: mongoSku
+        }, {
+          normalized: 'SELECT count(DISTINCT order_id)::int AS count FROM order_items_norm%',
+          jsonb: 'SELECT count(*)::int AS count FROM orders_jsonb%'
+        })
+      }
     };
 
     const pgNormalizedPlan = await pg.query(`EXPLAIN (ANALYZE, BUFFERS, WAL, FORMAT JSON)

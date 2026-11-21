@@ -33,13 +33,10 @@ docker compose down --volumes
 warm-cache 단일 Node 관찰값입니다. 제품 전체의 우열이나 Sharding·고가용성
 성능으로 일반화하지 않습니다.
 
-`diagnostics.mongoAggregateReadBoundary`는 같은 MongoDB `_id` 조회를 5,000회
-반복하고 Client 경과 시간과 `serverStatus.opLatencies.reads`의 증가분을
-비교합니다. 이를 통해 서버 내부 조회 시간과 Driver·BSON·Socket·Event Loop를
-포함한 서버 밖 경계 시간을 구분합니다. 서버 밖 시간을 그 네 요소로 다시
-나누는 실험은 아닙니다.
-
-`diagnostics.skuReadBoundary`는 JSONB와 MongoDB의 SKU 주문 수 조회를 각각
-1,000회씩 5세트 실행합니다. PostgreSQL은 `pg_stat_statements`, MongoDB는
+`diagnostics.comparisonReadBoundaries`는 한 주문 전체 조회와 SKU 주문 수 조회를
+정규화·JSONB·MongoDB 각각 100회 예열한 뒤 1,000회씩 5세트 실행합니다.
+PostgreSQL은 `pg_stat_statements`, MongoDB는
 `serverStatus.opLatencies.reads`로 서버 내부 시간과 Client 전체 시간을
-분리하고, 두 엔진의 cache read 증가량도 함께 기록합니다.
+분리하고, 두 엔진의 cache read 증가량도 함께 기록합니다. `서버 밖` 값은
+Client 전체에서 서버 내부를 뺀 차이값이며 Driver·직렬화·Protocol·Socket·
+Event Loop 각각을 따로 잰 값은 아닙니다.
