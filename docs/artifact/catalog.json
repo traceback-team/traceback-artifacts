@@ -70,6 +70,17 @@
           ]
         },
         {
+          "id": "nosql",
+          "title": "NoSQL",
+          "description": "RDBMS와 다른 데이터 모델의 목적을 구분하고, MongoDB 요청이 BSON·Query 처리·WiredTiger Page와 Journal로 이어지는 전체 경로를 따라갑니다.",
+          "layout": "reading-path",
+          "artifacts": [
+            {"id": "DB-NOSQL-01", "title": "현대 RDBMS와 NoSQL의 경계", "description": "MongoDB를 중심으로 논리 모델·물리 저장·실측 Trade-off를 비교", "href": "topics/database-systems/nosql/mongodb-architecture/index.html"},
+            {"id": "DB-NOSQL-02", "title": "MongoDB 요청 처리", "description": "Client 객체가 Driver의 BSON·OP_MSG를 거쳐 mongod의 검증·계획·실행으로 이어지는 흐름", "href": "topics/database-systems/nosql/mongodb-request-flow/index.html"},
+            {"id": "DB-NOSQL-03", "title": "WiredTiger 저장 내부", "description": "논리 Document와 Record·B-tree Page·Cache·Index·Transaction·Journal의 물리 경계", "href": "topics/database-systems/nosql/wiredtiger-storage/index.html"}
+          ]
+        },
+        {
           "id": "concurrency",
           "title": "동시성·잠금",
           "description": "좌석 예약으로 대기·데드락·중복 예약을 구분한 뒤, PostgreSQL의 INSERT 교착 상태를 더 자세히 따라갑니다.",

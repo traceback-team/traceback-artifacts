@@ -1,0 +1,8 @@
+{
+  "name": "traceback-mongodb-architecture-lab-client",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "mongodb": "7.9.0"
+  }
+}
