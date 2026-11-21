@@ -38,3 +38,8 @@ warm-cache 단일 Node 관찰값입니다. 제품 전체의 우열이나 Shardin
 비교합니다. 이를 통해 서버 내부 조회 시간과 Driver·BSON·Socket·Event Loop를
 포함한 서버 밖 경계 시간을 구분합니다. 서버 밖 시간을 그 네 요소로 다시
 나누는 실험은 아닙니다.
+
+`diagnostics.skuReadBoundary`는 JSONB와 MongoDB의 SKU 주문 수 조회를 각각
+1,000회씩 5세트 실행합니다. PostgreSQL은 `pg_stat_statements`, MongoDB는
+`serverStatus.opLatencies.reads`로 서버 내부 시간과 Client 전체 시간을
+분리하고, 두 엔진의 cache read 증가량도 함께 기록합니다.

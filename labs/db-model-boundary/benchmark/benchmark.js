@@ -44,6 +44,10 @@ function percentile(sorted, fraction) {
   return sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * fraction))];
 }
 
+function median(values) {
+  return percentile([...values].sort((a, b) => a - b), 0.5);
+}
+
 async function measure(fn, iterations, warmups = 10) {
   for (let i = 0; i < warmups; i += 1) await fn(i);
   const samples = [];
@@ -85,6 +89,74 @@ async function measureMongoReadBoundary(mongo, readFn, iterations = 5000) {
   };
 }
 
+async function measureSkuBoundaries(pg, mongo, pgReadFn, mongoReadFn, iterations = 1000, runs = 5) {
+  const admin = mongo.db('admin');
+  const samples = [];
+  for (let run = 1; run <= runs; run += 1) {
+    await pg.query('SELECT pg_stat_statements_reset()');
+    const pgStarted = performance.now();
+    for (let i = 0; i < iterations; i += 1) await pgReadFn();
+    const pgClientAverageMs = (performance.now() - pgStarted) / iterations;
+    const pgStats = (await pg.query(`
+      SELECT calls, total_plan_time, total_exec_time, shared_blks_hit, shared_blks_read
+      FROM pg_stat_statements
+      WHERE query LIKE 'SELECT count(*)::int AS count FROM orders_jsonb%'
+      ORDER BY calls DESC LIMIT 1`)).rows[0];
+
+    const mongoBeforeStatus = await admin.command({ serverStatus: 1 });
+    const mongoBeforeReads = mongoBeforeStatus.opLatencies.reads;
+    const mongoBeforeCache = mongoBeforeStatus.wiredTiger.cache;
+    const mongoStarted = performance.now();
+    for (let i = 0; i < iterations; i += 1) await mongoReadFn();
+    const mongoClientAverageMs = (performance.now() - mongoStarted) / iterations;
+    const mongoAfterStatus = await admin.command({ serverStatus: 1 });
+    const mongoAfterReads = mongoAfterStatus.opLatencies.reads;
+    const mongoAfterCache = mongoAfterStatus.wiredTiger.cache;
+    const mongoServerOperations = Number(mongoAfterReads.ops) - Number(mongoBeforeReads.ops);
+    const mongoServerAverageMs = (Number(mongoAfterReads.latency) - Number(mongoBeforeReads.latency)) / mongoServerOperations / 1000;
+    samples.push({
+      run,
+      postgres: {
+        calls: Number(pgStats.calls),
+        clientAverageMs: Number(pgClientAverageMs.toFixed(6)),
+        serverPlanAverageMs: Number((Number(pgStats.total_plan_time) / Number(pgStats.calls)).toFixed(6)),
+        serverExecuteAverageMs: Number((Number(pgStats.total_exec_time) / Number(pgStats.calls)).toFixed(6)),
+        sharedBufferHitsPerCall: Number((Number(pgStats.shared_blks_hit) / Number(pgStats.calls)).toFixed(3)),
+        sharedBufferReadsPerCall: Number((Number(pgStats.shared_blks_read) / Number(pgStats.calls)).toFixed(3))
+      },
+      mongo: {
+        serverOperations: mongoServerOperations,
+        clientAverageMs: Number(mongoClientAverageMs.toFixed(6)),
+        serverAverageMs: Number(mongoServerAverageMs.toFixed(6)),
+        cachePagesRead: Number(mongoAfterCache['pages read into cache']) - Number(mongoBeforeCache['pages read into cache']),
+        cacheBytesRead: Number(mongoAfterCache['bytes read into cache']) - Number(mongoBeforeCache['bytes read into cache'])
+      }
+    });
+  }
+  const pgClient = samples.map(sample => sample.postgres.clientAverageMs);
+  const pgServer = samples.map(sample => sample.postgres.serverPlanAverageMs + sample.postgres.serverExecuteAverageMs);
+  const mongoClient = samples.map(sample => sample.mongo.clientAverageMs);
+  const mongoServer = samples.map(sample => sample.mongo.serverAverageMs);
+  return {
+    iterationsPerRun: iterations,
+    runs,
+    samples,
+    median: {
+      postgres: {
+        clientAverageMs: Number(median(pgClient).toFixed(6)),
+        serverAverageMs: Number(median(pgServer).toFixed(6)),
+        outsideServerAverageMs: Number((median(pgClient) - median(pgServer)).toFixed(6))
+      },
+      mongo: {
+        clientAverageMs: Number(median(mongoClient).toFixed(6)),
+        serverAverageMs: Number(median(mongoServer).toFixed(6)),
+        outsideServerAverageMs: Number((median(mongoClient) - median(mongoServer)).toFixed(6))
+      }
+    },
+    method: 'Five sequential runs; PostgreSQL pg_stat_statements compared with client wall time, MongoDB serverStatus.opLatencies.reads compared with client wall time'
+  };
+}
+
 function pgPlanSummary(planResult) {
   const root = planResult.rows[0]['QUERY PLAN'][0];
   const nodes = [];
@@ -123,8 +195,23 @@ function mongoPlanSummary(explain) {
   };
 }
 
+function mongoAggregatePlanSummary(explain) {
+  const cursor = explain.stages.find(stage => stage.$cursor)?.$cursor;
+  const text = JSON.stringify(cursor.queryPlanner.winningPlan);
+  const stages = [...text.matchAll(/"stage":"([A-Z0-9_]+)"/g)].map(match => match[1]);
+  return {
+    stages: [...new Set(stages)],
+    indexNames: ['_id_', 'customer_status', 'items_sku'].filter(name => text.includes(name)),
+    nReturned: cursor.executionStats.nReturned,
+    keysExamined: cursor.executionStats.totalKeysExamined,
+    docsExamined: cursor.executionStats.totalDocsExamined,
+    executionTimeMillis: cursor.executionStats.executionTimeMillis
+  };
+}
+
 async function setupPostgres(pg) {
   await pg.query(`
+    CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
     DROP TABLE IF EXISTS order_items_norm, order_shipping_norm, orders_norm, orders_jsonb CASCADE;
     CREATE TABLE orders_norm (
       id bigint PRIMARY KEY,
@@ -312,7 +399,8 @@ async function main() {
       }
     };
     const diagnostics = {
-      mongoAggregateReadBoundary: await measureMongoReadBoundary(mongo, mongoRead)
+      mongoAggregateReadBoundary: await measureMongoReadBoundary(mongo, mongoRead),
+      skuReadBoundary: await measureSkuBoundaries(pg, mongo, jsonbSku, mongoSku)
     };
 
     const pgNormalizedPlan = await pg.query(`EXPLAIN (ANALYZE, BUFFERS, WAL, FORMAT JSON)
@@ -330,7 +418,10 @@ async function main() {
     const pgNormalizedSkuPlan = await pg.query('EXPLAIN (ANALYZE, BUFFERS, WAL, FORMAT JSON) SELECT count(DISTINCT order_id) FROM order_items_norm WHERE sku=$1', [targetSku]);
     const pgJsonbSkuPlan = await pg.query("EXPLAIN (ANALYZE, BUFFERS, WAL, FORMAT JSON) SELECT count(*) FROM orders_jsonb WHERE doc->'items' @> $1::jsonb", [JSON.stringify([{ sku: targetSku }])]);
     const mongoReadPlan = await orders.find({ _id: targetId }).explain('executionStats');
-    const mongoSkuPlan = await orders.find({ 'items.sku': targetSku }).explain('executionStats');
+    const mongoSkuPlan = await orders.aggregate([
+      { $match: { 'items.sku': targetSku } },
+      { $group: { _id: null, count: { $sum: 1 } } }
+    ]).explain('executionStats');
 
     await pg.query('CHECKPOINT');
     await mongo.db('admin').command({ fsync: 1 });
@@ -361,7 +452,7 @@ async function main() {
         skuCount: {
           normalized: pgPlanSummary(pgNormalizedSkuPlan),
           jsonb: pgPlanSummary(pgJsonbSkuPlan),
-          mongo: mongoPlanSummary(mongoSkuPlan)
+          mongo: mongoAggregatePlanSummary(mongoSkuPlan)
         }
       },
       sizes: {
