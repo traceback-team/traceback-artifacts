@@ -32,3 +32,9 @@ docker compose down --volumes
 결과는 `results/results.json`에 기록됩니다. 이 결과는 한 개발용 Docker Host의
 warm-cache 단일 Node 관찰값입니다. 제품 전체의 우열이나 Sharding·고가용성
 성능으로 일반화하지 않습니다.
+
+`diagnostics.mongoAggregateReadBoundary`는 같은 MongoDB `_id` 조회를 5,000회
+반복하고 Client 경과 시간과 `serverStatus.opLatencies.reads`의 증가분을
+비교합니다. 이를 통해 서버 내부 조회 시간과 Driver·BSON·Socket·Event Loop를
+포함한 서버 밖 경계 시간을 구분합니다. 서버 밖 시간을 그 네 요소로 다시
+나누는 실험은 아닙니다.

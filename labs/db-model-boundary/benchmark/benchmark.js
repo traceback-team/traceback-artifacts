@@ -62,6 +62,29 @@ async function measure(fn, iterations, warmups = 10) {
   };
 }
 
+async function measureMongoReadBoundary(mongo, readFn, iterations = 5000) {
+  const admin = mongo.db('admin');
+  for (let i = 0; i < 200; i += 1) await readFn();
+  const before = (await admin.command({ serverStatus: 1 })).opLatencies.reads;
+  const started = performance.now();
+  for (let i = 0; i < iterations; i += 1) await readFn();
+  const clientElapsedMs = performance.now() - started;
+  const after = (await admin.command({ serverStatus: 1 })).opLatencies.reads;
+  const serverOperations = Number(after.ops) - Number(before.ops);
+  const serverLatencyMicros = Number(after.latency) - Number(before.latency);
+  const clientAverageMs = clientElapsedMs / iterations;
+  const serverAverageMs = serverLatencyMicros / serverOperations / 1000;
+  return {
+    iterations,
+    serverOperations,
+    clientAverageMs: Number(clientAverageMs.toFixed(6)),
+    serverAverageMs: Number(serverAverageMs.toFixed(6)),
+    outsideServerAverageMs: Number((clientAverageMs - serverAverageMs).toFixed(6)),
+    outsideServerSharePercent: Number((((clientAverageMs - serverAverageMs) / clientAverageMs) * 100).toFixed(1)),
+    method: 'Client wall time compared with MongoDB serverStatus.opLatencies.reads delta'
+  };
+}
+
 function pgPlanSummary(planResult) {
   const root = planResult.rows[0]['QUERY PLAN'][0];
   const nodes = [];
@@ -288,6 +311,9 @@ async function main() {
         mongo: await measure(mongoSku, readIterations)
       }
     };
+    const diagnostics = {
+      mongoAggregateReadBoundary: await measureMongoReadBoundary(mongo, mongoRead)
+    };
 
     const pgNormalizedPlan = await pg.query(`EXPLAIN (ANALYZE, BUFFERS, WAL, FORMAT JSON)
       SELECT jsonb_build_object(
@@ -325,6 +351,7 @@ async function main() {
       conditions: { orderCount, itemsPerOrder, readIterations, writeIterations, seed, loadSeconds, cache: 'warm', topology: 'single-node containers' },
       target: { targetId, targetCustomer, targetStatus, targetSku },
       latency,
+      diagnostics,
       plans: {
         aggregateRead: {
           normalized: pgPlanSummary(pgNormalizedPlan),
