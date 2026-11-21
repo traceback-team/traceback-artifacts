@@ -18,11 +18,18 @@
 #experiment .finding p{margin-top:5px;color:var(--muted);font-size:.58rem}
 #experiment .comparison-rationale{margin-top:9px;border:1px solid #3b5a64;border-radius:8px;background:#091920;padding:9px 10px;color:var(--muted);font-size:.55rem}
 #experiment .comparison-rationale b{color:var(--text)}
-#experiment .metric-source{margin:10px 0 13px}
-#experiment .metric-source ol{margin:0;padding-left:19px;color:var(--muted);font-size:.56rem}
-#experiment .metric-source li{margin:6px 0}
-#experiment .metric-source b,#experiment .metric-source strong{color:var(--text)}
-#experiment .metric-source p{margin-top:8px;color:var(--muted);font-size:.56rem}
+#experiment .outside-explainer{margin:10px 0 13px;border:1px solid #8a642c;border-left:4px solid #d89a36;border-radius:9px;background:#211c13;padding:11px 12px}
+#experiment .outside-equation{display:grid;grid-template-columns:1fr 20px 1fr 20px 1fr;align-items:center;gap:5px}
+#experiment .outside-equation span{border:1px solid #4c4b42;border-radius:7px;background:#091920;padding:8px}
+#experiment .outside-equation span.orange{border-color:#d89a36;background:#332714}
+#experiment .outside-equation small{display:block;color:var(--muted);font-size:.46rem;font-weight:900}
+#experiment .outside-equation b{display:block;margin-top:2px;font-size:.55rem}
+#experiment .outside-equation i{text-align:center;color:#e8b75f;font-style:normal;font-weight:950}
+#experiment .outside-explainer>p{margin-top:9px;color:#ded4c0;font-size:.56rem}
+#experiment .outside-explainer strong{color:var(--text)}
+#experiment .outside-source{display:flex;flex-wrap:wrap;gap:5px 12px;margin-top:8px;border-top:1px solid #544631;padding-top:7px;color:var(--muted);font-size:.5rem}
+#experiment .outside-source b{color:#f1c673}
+#experiment .outside-source a{margin-left:auto}
 #experiment .query-details{margin-top:10px}
 #experiment .evidence-pair .query-paths{order:1}
 #experiment .evidence-pair .query-details{order:2}
@@ -37,4 +44,4 @@
 #experiment .query-details pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.52rem;line-height:1.55}
 #experiment .limit-list{margin:8px 0 0;padding-left:18px;color:var(--muted);font-size:.58rem}
 #experiment .limit-list li{margin:5px 0}
-@media(max-width:620px){#experiment .result-row{grid-template-columns:76px minmax(0,1fr) 54px}#experiment .finding-grid,#experiment .server-deep-dive{grid-template-columns:1fr}#experiment .measure-legend{display:grid;gap:5px}}
+@media(max-width:620px){#experiment .result-row{grid-template-columns:76px minmax(0,1fr) 54px}#experiment .finding-grid,#experiment .server-deep-dive{grid-template-columns:1fr}#experiment .measure-legend{display:grid;gap:5px}#experiment .outside-equation{grid-template-columns:1fr}#experiment .outside-equation i{min-height:19px}#experiment .outside-equation i::after{content:"↓"}#experiment .outside-equation i{font-size:0}#experiment .outside-source{display:grid}#experiment .outside-source a{margin-left:0}}
