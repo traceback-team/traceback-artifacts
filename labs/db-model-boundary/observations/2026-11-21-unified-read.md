@@ -17,9 +17,9 @@
 
 | 모델 | Client 전체 | 서버 내부 | 서버 밖 |
 |---|---:|---:|---:|
-| PostgreSQL 정규화 | 0.257 ms | 0.068 ms | 0.189 ms |
-| PostgreSQL JSONB | 0.145 ms | 0.019 ms | 0.129 ms |
-| MongoDB Document | 0.304 ms | 0.047 ms | 0.257 ms |
+| PostgreSQL 정규화 | 0.2645 ms | 0.0715 ms | 0.1930 ms |
+| PostgreSQL JSONB | 0.1529 ms | 0.0193 ms | 0.1336 ms |
+| MongoDB Document | 0.2692 ms | 0.0403 ms | 0.2289 ms |
 
 - 정규화: PK Index Scan 3회, JOIN·Sort·Aggregate, Buffer hit 12
 - JSONB: PK Index Scan 1회, Row 1개, Buffer hit 3
@@ -30,9 +30,9 @@
 
 | 모델 | Client 전체 | 서버 내부 | 서버 밖 |
 |---|---:|---:|---:|
-| PostgreSQL 정규화 | 0.131 ms | 0.025 ms | 0.107 ms |
-| PostgreSQL JSONB | 0.245 ms | 0.131 ms | 0.114 ms |
-| MongoDB Document | 0.350 ms | 0.101 ms | 0.244 ms |
+| PostgreSQL 정규화 | 0.1358 ms | 0.0254 ms | 0.1103 ms |
+| PostgreSQL JSONB | 0.2499 ms | 0.1339 ms | 0.1160 ms |
+| MongoDB Document | 0.2930 ms | 0.0893 ms | 0.2037 ms |
 
 - 정규화: Index Only Scan, Index entry 75개, Buffer hit 5
 - JSONB: GIN 후보 184개, Heap Row 75개, Buffer hit 86
@@ -41,8 +41,13 @@
 
 ## 해석
 
-한 주문 조회에서 JSONB는 이미 조립된 Row 하나를 읽어 서버 경로가 가장
-짧았다. SKU 조회에서 정규화 모델은 주문 항목 Index만으로 답해 가장 짧았다.
+한 주문 조회에서 정규화 SQL이 JSON을 조립한 이유는 세 모델이 한 번의 DB
+요청으로 동일한 중첩 JSON 응답을 반환하도록 비교 조건을 맞추기 위해서다.
+이는 정규화 모델의 필수 구현이 아니다. 애플리케이션에서 Flat Row를 조립하거나
+여러 Query로 나누면 다른 실험이 된다. 이번 조건에서는 JSONB가 이미 조립된
+Row 하나를 읽어 서버 경로가 가장 짧았다. JSONB와 MongoDB의 Client 차이
+`0.116 ms` 중 서버 내부 차이는 `0.021 ms`, 서버 밖 차이는 `0.095 ms`였다.
+SKU 조회에서는 정규화 모델이 주문 항목 Index만으로 답해 가장 짧았다.
 MongoDB의 서버 내부 시간이 항상 가장 긴 것은 아니었고, 이 환경에서는 서버
 밖 차이값이 더 컸다. 그 차이값을 Driver·BSON·Wire Protocol·Socket·Event
 Loop 각각으로 분리하지 않았으므로 특정 요소 하나를 원인으로 단정하지 않는다.

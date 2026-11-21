@@ -112,10 +112,12 @@ async function measureMongoBoundary(mongo, readFn, iterations) {
 function summarizeBoundaryRuns(samples) {
   return Object.fromEntries(['normalized', 'jsonb', 'mongo'].map(model => {
     const values = samples.map(sample => sample[model]);
+    const clientAverageMs = median(values.map(value => value.clientAverageMs));
+    const serverAverageMs = median(values.map(value => value.serverAverageMs));
     return [model, {
-      clientAverageMs: Number(median(values.map(value => value.clientAverageMs)).toFixed(6)),
-      serverAverageMs: Number(median(values.map(value => value.serverAverageMs)).toFixed(6)),
-      outsideServerAverageMs: Number(median(values.map(value => value.outsideServerAverageMs)).toFixed(6)),
+      clientAverageMs: Number(clientAverageMs.toFixed(6)),
+      serverAverageMs: Number(serverAverageMs.toFixed(6)),
+      outsideServerAverageMs: Number((clientAverageMs - serverAverageMs).toFixed(6)),
       clientRangeMs: [
         Number(Math.min(...values.map(value => value.clientAverageMs)).toFixed(6)),
         Number(Math.max(...values.map(value => value.clientAverageMs)).toFixed(6))
