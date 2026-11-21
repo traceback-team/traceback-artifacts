@@ -23,8 +23,13 @@
 #experiment .evidence-pair .query-details{order:2}
 #experiment .evidence-pair .result-stacks{order:3}
 #experiment .evidence-pair .measure-legend{order:4}
-#experiment .evidence-pair .reason-note{order:5}
+#experiment .evidence-pair .server-deep-dive{order:5}
+#experiment .evidence-pair .reason-note{order:6}
+#experiment .server-deep-dive{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+#experiment .server-deep-dive>div{border:1px solid #3b5a64;border-radius:8px;background:#091920;padding:9px}
+#experiment .server-deep-dive b{display:block;font-size:.56rem}
+#experiment .server-deep-dive span{display:block;margin-top:3px;color:var(--muted);font-size:.52rem}
 #experiment .query-details pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.52rem;line-height:1.55}
 #experiment .limit-list{margin:8px 0 0;padding-left:18px;color:var(--muted);font-size:.58rem}
 #experiment .limit-list li{margin:5px 0}
-@media(max-width:620px){#experiment .result-row{grid-template-columns:76px minmax(0,1fr) 54px}#experiment .finding-grid{grid-template-columns:1fr}#experiment .measure-legend{display:grid;gap:5px}}
+@media(max-width:620px){#experiment .result-row{grid-template-columns:76px minmax(0,1fr) 54px}#experiment .finding-grid,#experiment .server-deep-dive{grid-template-columns:1fr}#experiment .measure-legend{display:grid;gap:5px}}
