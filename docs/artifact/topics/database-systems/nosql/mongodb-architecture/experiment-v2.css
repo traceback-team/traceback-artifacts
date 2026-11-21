@@ -1,0 +1,28 @@
+#experiment .experiment-purpose{margin:12px 0;border-left:4px solid var(--client);background:#0d312b;padding:11px 14px;font-size:.66rem}
+#experiment .result-stacks{display:grid;gap:9px;margin-top:12px;border-top:1px solid #29444c;padding-top:10px}
+#experiment .result-row{display:grid;grid-template-columns:92px minmax(0,1fr) 62px;gap:8px;align-items:center}
+#experiment .result-label{font-size:.54rem;font-weight:900}
+#experiment .cost-track{display:flex;height:20px;background:#091920;border-radius:5px;overflow:hidden}
+#experiment .cost-segment.server{background:#3987e5}
+#experiment .cost-segment.outside{background:#d89a36}
+#experiment .result-total{text-align:right;font:750 .54rem ui-monospace,SFMono-Regular,Menlo,monospace}
+#experiment .measure-legend{display:flex;gap:14px;margin-top:8px;color:var(--muted);font-size:.52rem}
+#experiment .measure-legend i{display:inline-block;width:10px;height:10px;margin-right:4px;border-radius:2px}
+#experiment .measure-legend .server{background:#3987e5}
+#experiment .measure-legend .outside{background:#d89a36}
+#experiment .finding-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+#experiment .finding{border:1px solid var(--line);border-radius:11px;background:var(--panel);padding:13px}
+#experiment .finding.confirmed{border-top:4px solid var(--client)}
+#experiment .finding.unknown{border-top:4px solid var(--server)}
+#experiment .finding h3{font-size:.74rem}
+#experiment .finding p{margin-top:5px;color:var(--muted);font-size:.58rem}
+#experiment .query-details{margin-top:10px}
+#experiment .evidence-pair .query-paths{order:1}
+#experiment .evidence-pair .query-details{order:2}
+#experiment .evidence-pair .result-stacks{order:3}
+#experiment .evidence-pair .measure-legend{order:4}
+#experiment .evidence-pair .reason-note{order:5}
+#experiment .query-details pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.52rem;line-height:1.55}
+#experiment .limit-list{margin:8px 0 0;padding-left:18px;color:var(--muted);font-size:.58rem}
+#experiment .limit-list li{margin:5px 0}
+@media(max-width:620px){#experiment .result-row{grid-template-columns:76px minmax(0,1fr) 54px}#experiment .finding-grid{grid-template-columns:1fr}#experiment .measure-legend{display:grid;gap:5px}}
