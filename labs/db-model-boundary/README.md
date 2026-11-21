@@ -40,3 +40,8 @@ PostgreSQL은 `pg_stat_statements`, MongoDB는
 분리하고, 두 엔진의 cache read 증가량도 함께 기록합니다. `서버 밖` 값은
 Client 전체에서 서버 내부를 뺀 차이값이며 Driver·직렬화·Protocol·Socket·
 Event Loop 각각을 따로 잰 값은 아닙니다.
+
+`diagnostics.mongoAggregateProfile`은 MongoDB profiler를 잠시 활성화해 주문 단건
+조회의 `cpuNanos`와 `planningTimeMicros`를 기록합니다. Profiler 자체의 부하가
+있고 PostgreSQL의 경과 시간과 MongoDB CPU 시간은 계측 범위가 같지 않으므로,
+서버 내부 단계를 이해하는 보조 진단으로만 사용합니다.

@@ -78,11 +78,15 @@ async function measurePostgresBoundary(pg, readFn, queryPattern, iterations) {
     WHERE query LIKE $1
     ORDER BY calls DESC LIMIT 1`, [queryPattern])).rows[0];
   const calls = Number(stats.calls);
-  const serverAverageMs = (Number(stats.total_plan_time) + Number(stats.total_exec_time)) / calls;
+  const serverPlanAverageMs = Number(stats.total_plan_time) / calls;
+  const serverExecuteAverageMs = Number(stats.total_exec_time) / calls;
+  const serverAverageMs = serverPlanAverageMs + serverExecuteAverageMs;
   return {
     calls,
     clientAverageMs: Number(clientAverageMs.toFixed(6)),
     serverAverageMs: Number(serverAverageMs.toFixed(6)),
+    serverPlanAverageMs: Number(serverPlanAverageMs.toFixed(6)),
+    serverExecuteAverageMs: Number(serverExecuteAverageMs.toFixed(6)),
     outsideServerAverageMs: Number((clientAverageMs - serverAverageMs).toFixed(6)),
     sharedBufferHitsPerCall: Number((Number(stats.shared_blks_hit) / calls).toFixed(3)),
     sharedBufferReadsPerCall: Number((Number(stats.shared_blks_read) / calls).toFixed(3))
@@ -118,12 +122,50 @@ function summarizeBoundaryRuns(samples) {
       clientAverageMs: Number(clientAverageMs.toFixed(6)),
       serverAverageMs: Number(serverAverageMs.toFixed(6)),
       outsideServerAverageMs: Number((clientAverageMs - serverAverageMs).toFixed(6)),
+      ...(model === 'mongo' ? {} : {
+        serverPlanAverageMs: Number(median(values.map(value => value.serverPlanAverageMs)).toFixed(6)),
+        serverExecuteAverageMs: Number(median(values.map(value => value.serverExecuteAverageMs)).toFixed(6))
+      }),
       clientRangeMs: [
         Number(Math.min(...values.map(value => value.clientAverageMs)).toFixed(6)),
         Number(Math.max(...values.map(value => value.clientAverageMs)).toFixed(6))
       ]
     }];
   }));
+}
+
+async function measureMongoProfileBreakdown(mongo, readFn, iterations = 1000) {
+  const db = mongo.db('model_lab');
+  await db.command({ profile: 0 });
+  try {
+    await db.collection('system.profile').drop();
+  } catch (error) {
+    if (error.codeName !== 'NamespaceNotFound') throw error;
+  }
+  await db.command({ profile: 2, slowms: 0, sampleRate: 1 });
+  try {
+    for (let i = 0; i < iterations; i += 1) await readFn();
+  } finally {
+    await db.command({ profile: 0 });
+  }
+  const profiles = await db.collection('system.profile').find({
+    ns: 'model_lab.orders',
+    op: 'query'
+  }, {
+    projection: { cpuNanos: 1, planningTimeMicros: 1, keysExamined: 1, docsExamined: 1, nreturned: 1 }
+  }).toArray();
+  const cpuMicros = profiles.map(profile => Number(profile.cpuNanos ?? 0) / 1000);
+  const planningMicros = profiles.map(profile => Number(profile.planningTimeMicros ?? 0));
+  return {
+    requestedIterations: iterations,
+    capturedProfiles: profiles.length,
+    medianCpuMicros: Number(median(cpuMicros).toFixed(3)),
+    medianPlanningMicros: Number(median(planningMicros).toFixed(3)),
+    sampleKeysExamined: profiles[0]?.keysExamined ?? null,
+    sampleDocsExamined: profiles[0]?.docsExamined ?? null,
+    sampleReturned: profiles[0]?.nreturned ?? null,
+    limitation: 'MongoDB profiler adds overhead; cpuNanos and PostgreSQL elapsed execution time are not identical measurement scopes.'
+  };
 }
 
 async function measureThreeModelBoundaries(pg, mongo, reads, patterns, iterations = 1000, runs = 5) {
@@ -404,7 +446,8 @@ async function main() {
           normalized: 'SELECT count(DISTINCT order_id)::int AS count FROM order_items_norm%',
           jsonb: 'SELECT count(*)::int AS count FROM orders_jsonb%'
         })
-      }
+      },
+      mongoAggregateProfile: await measureMongoProfileBreakdown(mongo, mongoRead)
     };
 
     const pgNormalizedPlan = await pg.query(`EXPLAIN (ANALYZE, BUFFERS, WAL, FORMAT JSON)
