@@ -4,7 +4,7 @@
   if (!script) return;
 
   const navigation = document.createElement("script");
-  navigation.src = new URL("navigation.js", script.src).href;
+  navigation.src = new URL("navigation.js?v=2", script.src).href;
   navigation.defer = true;
   document.head.append(navigation);
 

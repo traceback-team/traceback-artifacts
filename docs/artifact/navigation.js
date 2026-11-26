@@ -23,6 +23,7 @@
     get(key) { try { return sessionStorage.getItem(key); } catch { return null; } },
     set(key, value) { try { sessionStorage.setItem(key, value); } catch {} },
   };
+  const catalogCacheKey = "traceback-nav-catalog-v2";
 
   function collectionFromHash(catalog) {
     if (!isIndex) return null;
@@ -176,14 +177,14 @@
   }
 
   const boot = () => {
-    const cached = session.get("traceback-nav-catalog");
-    if (cached) {
-      try { start(JSON.parse(cached)); return; } catch {}
-    }
-    fetch(new URL("catalog.json", root)).then((response) => {
+    fetch(new URL("catalog.json", root), { cache: "no-store" }).then((response) => {
     if (!response.ok) throw new Error("catalog unavailable");
     return response.json();
-    }).then((catalog) => { session.set("traceback-nav-catalog", JSON.stringify(catalog)); start(catalog); }).catch(() => {});
+    }).then((catalog) => { session.set(catalogCacheKey, JSON.stringify(catalog)); start(catalog); }).catch(() => {
+      const cached = session.get(catalogCacheKey);
+      if (!cached) return;
+      try { start(JSON.parse(cached)); } catch {}
+    });
   };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once: true }); else boot();
 })();

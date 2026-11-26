@@ -1,0 +1,42 @@
+name: traceback-mongodb-architecture-lab
+
+services:
+  mongo:
+    image: mongo:7.0.41-jammy
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all", "--setParameter", "diagnosticDataCollectionEnabled=false"]
+    ports:
+      - "127.0.0.1:57017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand({ping:1}).ok"]
+      interval: 2s
+      timeout: 5s
+      retries: 40
+
+  replica-init:
+    image: mongo:7.0.41-jammy
+    depends_on:
+      mongo:
+        condition: service_healthy
+    restart: "no"
+    entrypoint: ["mongosh", "--quiet", "mongodb://mongo:27017/admin", "--eval"]
+    command:
+      - >-
+        try { rs.status().ok }
+        catch (error) { rs.initiate({_id:'rs0',members:[{_id:0,host:'mongo:27017'}]}).ok }
+
+  client:
+    build:
+      context: ./client
+    depends_on:
+      replica-init:
+        condition: service_completed_successfully
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/?replicaSet=rs0
+    volumes:
+      - ./client/observe.js:/app/observe.js:ro
+    restart: "no"
+
+volumes:
+  mongo-data:
